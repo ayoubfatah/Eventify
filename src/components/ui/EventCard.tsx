@@ -1,19 +1,19 @@
 "use client";
 import { type EventType } from "@/lib/types";
-import { motion } from "framer-motion";
+import { delay, motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 
-export default function Event({ data }: { data: EventType }) {
+export default function EventCard({ data }: { data: EventType }) {
   return (
-    <article className=" grid grid-cols-[550px,1fr] relative state-effects  ">
-      <div className="">
+    <article className=" grid grid-cols-[500px,1fr] relative ">
+      <div className="relative w-[500px] min-h-[350px]">
         <Image
-          className="w-full h-full object-cover"
+          priority
+          className=" object-cover w-full h-full"
           src={data.imageUrl}
           alt={data.slug}
-          width={300}
-          height={500}
+          fill
         />
       </div>
       <section className=" bg-[#000000]   flex flex-col justify-center  px-8">
@@ -49,8 +49,9 @@ export default function Event({ data }: { data: EventType }) {
         </div>
       </section>
       <motion.section
-        className="absolute w-[calc(100%+4px)] h-[calc(100%+4px)] -left-[2px] -top-[2px] -z-10 "
+        initial={{ opacity: 0 }}
         animate={{
+          opacity: 1,
           backgroundColor: [
             "rgba(59, 130, 246, 0.8)",
             "rgba(239, 68, 68, 0.8)",
@@ -61,10 +62,14 @@ export default function Event({ data }: { data: EventType }) {
           ],
         }}
         transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "linear",
+          opacity: { duration: 0.3 },
+          backgroundColor: {
+            duration: 10,
+            repeat: Infinity,
+            ease: "linear",
+          },
         }}
+        className="absolute w-[calc(100%+4px)] h-[calc(100%+4px)] -left-[2px] -top-[2px] -z-10"
       ></motion.section>
     </article>
   );

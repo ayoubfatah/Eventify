@@ -1,4 +1,4 @@
-export default function EventSkeleton() {
+export default function loading() {
   return (
     <main className="h-[calc(100vh-8rem)]  flex justify-center items-center">
       <article className="grid grid-cols-[450px,600px] relative state-effects">
