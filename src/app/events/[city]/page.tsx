@@ -1,6 +1,6 @@
 import EventsCard from "@/components/eventsCard";
 import H1 from "@/components/ui/h1";
-import { EventType } from "@/lib/types";
+import { type EventType } from "@/lib/types";
 
 interface Params {
   city: string;
@@ -9,7 +9,7 @@ interface Params {
 export default async function EventsPage({ params }: { params: Params }) {
   const value = await params;
   const name = value.city.charAt(0).toUpperCase() + value.city.slice(1);
-  console.log(value.city);
+
   const res = await fetch(
     `https://bytegrad.com/course-assets/projects/evento/api/events?city=${value.city}`,
     {
@@ -26,7 +26,7 @@ export default async function EventsPage({ params }: { params: Params }) {
       </main>
     );
   }
-  const events = ((await res?.json()) as EventType[]) ?? {};
+  const events = (await res?.json()) as EventType[];
 
   return (
     <main className="container mx-auto px-4 py-5 flex flex-col border-b border-white/30">

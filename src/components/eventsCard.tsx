@@ -1,4 +1,5 @@
 import { EventType } from "@/lib/types";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,9 +8,10 @@ import React from "react";
 export default function EventsCard({ event }: { event: EventType }) {
   return (
     <Link href={`/event/${event.slug}`} className="relative w-full  flex ">
-      <article className="relative w-full bg-white/10 flex flex-col rounded-md overflow-hidden  hover:scale-105  transition-all active:scale-[1.02] cursor-pointer">
+      <article className="relative w-full bg-[#232323] flex flex-col rounded-md overflow-hidden  hover:scale-105  transition-scale  active:scale-[1.02] duration-300 cursor-pointer">
         <Image
-          className="w-full h-[60%] object-fit"
+          priority={true}
+          className="w-full h-[60%] object-fill"
           alt="event"
           src={event.imageUrl}
           height={280}
@@ -23,11 +25,11 @@ export default function EventsCard({ event }: { event: EventType }) {
           <span className="pt-3 text-white/50">{event.location}</span>
         </section>
 
-        <section className="absolute left-[12px] top-[12px] h-[45px] w-[45px] bg-black/60 text-center flex flex-col items-center rounded-md  ">
+        <section className="absolute left-[12px] top-[12px] h-[45px] w-[45px]  text-center flex flex-col items-center rounded-md  ">
           <span className="font-bold text-xl -mb-[5px]">
             {new Date(event.date).toLocaleString("en-US", { day: "2-digit" })}
           </span>
-          <span className="text-xs uppercase text-primary">
+          <span className=" text-xs uppercase text-primary">
             {new Date(event.date)
               .toLocaleString("en-US", { month: "short" })
               .toUpperCase()}
