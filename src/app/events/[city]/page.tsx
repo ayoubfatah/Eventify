@@ -1,4 +1,4 @@
-import EventsCard from "@/components/eventsCard";
+import EventsCard from "@/components/ui/eventsCard";
 import H1 from "@/components/ui/h1";
 import { type EventType } from "@/lib/types";
 

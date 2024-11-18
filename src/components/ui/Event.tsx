@@ -6,17 +6,17 @@ import Image from "next/image";
 
 export default function Event({ data }: { data: EventType }) {
   return (
-    <article className=" grid grid-cols-[550px,1fr] relative">
-      <div className="bg-blue-500 ">
+    <article className=" grid grid-cols-[550px,1fr] relative state-effects  ">
+      <div className="">
         <Image
-          className="w-full  object-fill"
+          className="w-full h-full object-cover"
           src={data.imageUrl}
           alt={data.slug}
           width={300}
-          height={400}
+          height={500}
         />
       </div>
-      <section className=" bg-[#111111]   flex flex-col justify-center  px-8">
+      <section className=" bg-[#000000]   flex flex-col justify-center  px-8">
         {" "}
         <div className="py-4 ">
           <h1 className=" text-[40px] font-bold">{data.name}</h1>
@@ -24,7 +24,7 @@ export default function Event({ data }: { data: EventType }) {
             organized by {data.organizerName}
           </p>
         </div>
-        <p className="pb-4 h-[120px]">{data.description}</p>
+        <p className="pb-4 ">{data.description}</p>
         <div className="mb-4">
           {" "}
           <button className="  border border-primary py-4 px-8 hover:bg-primary  transition-all duration-200 ease-linear">

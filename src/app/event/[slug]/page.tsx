@@ -11,11 +11,7 @@ export default async function page({ params }: EventPageProps) {
 
   const res = await fetch(
     `https://bytegrad.com/course-assets/projects/evento/api/events/${slug}`,
-    {
-      next: {
-        revalidate: 3600,
-      },
-    }
+    {}
   );
   if (!res.ok) return <div>something happened</div>;
   const data = (await res.json()) as EventType;

@@ -11,7 +11,7 @@ export default function EventsCard({ event }: { event: EventType }) {
       <article className="relative w-full bg-[#232323] flex flex-col rounded-md overflow-hidden  hover:scale-105  transition-scale  active:scale-[1.02] duration-300 cursor-pointer">
         <Image
           priority={true}
-          className="w-full h-[60%] object-fill"
+          className="w-full h-[60%] object-cover"
           alt="event"
           src={event.imageUrl}
           height={280}
