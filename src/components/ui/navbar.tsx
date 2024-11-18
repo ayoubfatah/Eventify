@@ -12,6 +12,7 @@ type Routes = {
 const routes: Routes[] = [
   { name: "Home", path: "/" },
   { name: "All Events", path: "/events/all" },
+  { name: "explore", path: "/explore" },
 ];
 
 export default function Navbar() {
