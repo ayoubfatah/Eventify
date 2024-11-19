@@ -1,18 +1,7 @@
+import { notFound } from "next/navigation";
 import prisma from "./prisma";
 
-export async function getEvents(city: string) {
-  // const res = await fetch(
-  //   `https://bytegrad.com/course-assets/projects/evento/api/events?city=${city}`,
-  //   {
-  //     next: {
-  //       revalidate: 3600,
-  //     },
-  //   }
-  // );
-
-  // const events = (await res?.json()) as EventifyEvent[];
-
-  // return { events, res };
+export async function getEvents(city: string, page = 1) {
   const events = await prisma.eventifyEvent.findMany({
     where: {
       city:
@@ -20,8 +9,25 @@ export async function getEvents(city: string) {
           ? undefined
           : city.charAt(0).toUpperCase() + city.slice(1),
     },
+    orderBy: {
+      date: "asc",
+    },
+    take: 9,
+    skip: (page - 1) * 6,
   });
-  return events;
+  let totalCount;
+  if (city === "all") {
+    totalCount = await prisma.eventifyEvent.count();
+  } else {
+    totalCount = await prisma.eventifyEvent.count({
+      where: { city: city.charAt(0).toUpperCase() + city.slice(1) },
+    });
+  }
+
+  if (!events) {
+    notFound();
+  }
+  return { events, totalCount };
 }
 
 export async function getEvent(slug: string) {
