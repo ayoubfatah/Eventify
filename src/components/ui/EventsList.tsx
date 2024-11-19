@@ -4,9 +4,9 @@ import EventsCard from "./eventsCard";
 import { getEvents } from "@/lib/server";
 
 export default async function EventsList({ city }: { city: string }) {
-  const { events, res } = await getEvents(city);
+  const events = await getEvents(city);
   console.log(events);
-  if (!res.ok) {
+  if (!events) {
     return (
       <main className="flex flex-shrink  justify-center items-center text-center text-white text-4xl font-bold">
         there are no events in {city}

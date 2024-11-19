@@ -9,16 +9,16 @@ type EventPageProps = {
 
 export async function generateMetadata({ params }: EventPageProps) {
   const { slug } = await params;
-  const { event, res } = await getEvent(slug);
-  if (!res.ok) return null;
+  const event = await getEvent(slug);
+  if (!event) return null;
 
   return { title: ` ${event.name} event ` };
 }
 export default async function page({ params }: EventPageProps) {
   const { slug } = await params;
-  const { event, res } = await getEvent(slug);
+  const event = await getEvent(slug);
 
-  if (!res.ok) return <div>something happened</div>;
+  if (!event) return <div>something happened</div>;
 
   return (
     <main className="h-[calc(100vh-8rem)]  flex justify-center items-center">
