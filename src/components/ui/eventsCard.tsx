@@ -1,13 +1,29 @@
-import { EventType } from "@/lib/types";
-
+"use client";
+import { type EventifyEvent } from "@prisma/client";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-import React from "react";
+import React, { useRef } from "react";
 
-export default function EventsCard({ event }: { event: EventType }) {
+const MotionLink = motion(Link);
+
+export default function EventsCard({ event }: { event: EventifyEvent }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["0 1", "1.5 1"],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.3, 1]);
   return (
-    <Link href={`/event/${event.slug}`} className="relative w-full  flex ">
+    <MotionLink
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.8 }}
+      href={`/event/${event.slug}`}
+      style={{ scale, opacity }}
+      className="relative w-full  flex "
+    >
       <article className="relative w-full bg-[#232323] flex flex-col rounded-md overflow-hidden  hover:scale-105  transition-scale  active:scale-[1.02] duration-300 cursor-pointer">
         <Image
           priority={true}
@@ -36,6 +52,6 @@ export default function EventsCard({ event }: { event: EventType }) {
           </span>
         </section>
       </article>
-    </Link>
+    </MotionLink>
   );
 }

@@ -10,7 +10,7 @@ export default function H1({
   className?: ClassValue;
 }) {
   return (
-    <h1 className={cn("text-3xl lg:text-7xl font-bold", className)}>
+    <h1 className={cn("text-2xl lg:text-6xl font-bold", className)}>
       {children}
     </h1>
   );

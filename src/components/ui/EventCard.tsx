@@ -1,10 +1,10 @@
 "use client";
-import { type EventType } from "@/lib/types";
-import { delay, motion } from "framer-motion";
+import { type EventifyEvent } from "@prisma/client";
+import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 
-export default function EventCard({ data }: { data: EventType }) {
+export default function EventCard({ data }: { data: EventifyEvent }) {
   return (
     <article className=" grid grid-cols-[500px,1fr] relative ">
       <div className="relative w-[500px] min-h-[350px]">
