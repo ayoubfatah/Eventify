@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}   `}>
-        <div className=" flex flex-col min-h-screen max-w-7xl mx-auto  overflow-hidden">
+        <div className=" flex flex-col min-h-screen max-w-7xl mx-auto ">
           <Navbar />
           <main className=" lg:flex-grow">{children}</main>
           <Footer />

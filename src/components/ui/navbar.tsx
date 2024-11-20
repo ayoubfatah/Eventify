@@ -19,11 +19,11 @@ export default function Navbar() {
   const activePathname = usePathname();
 
   return (
-    <header className="-translate-y-10 xs:translate-y-0  mb-10 xs:flex justify-between   py-5 items-center font-semibold container mx-auto">
-      <span>
+    <header className="overflow-hidden xs:flex justify-between   py-5 items-center font-semibold container mx-auto">
+      <span className="-translate-y-10 xs:translate-y-0  ">
         <Link href={"/"}>Logo</Link>
       </span>
-      <nav className="">
+      <nav className="-translate-y-10 xs:translate-y-0  ">
         <ul className="  flex justify-between gap-4 items-center ">
           {routes.map((route) => (
             <li key={route.name} className="relative">

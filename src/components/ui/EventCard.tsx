@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function EventCard({ data }: { data: EventifyEvent }) {
   return (
-    <article className="mt-[155px] sm:mt-[100px] 2lg:grid  2lg:grid-cols-[500px,1fr] 2lg:mt-0 relative ">
+    <article className=" sm:mt-[195px] sm:mt-[160px] 2lg:grid  2lg:grid-cols-[500px,1fr] 2lg:mt-0 relative ">
       <div className="relative  flex justify-center items-center w-full h-[350px] 2lg:[380px]  2lg:w-[500px] lg:-min-h-[350px]">
         <Image
           priority
