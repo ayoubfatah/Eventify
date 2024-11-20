@@ -3,13 +3,13 @@ import { getEvent } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 
 type EventPageProps = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
 export async function generateMetadata({ params }: EventPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   const event = await getEvent(slug);
   if (!event) return null;
 

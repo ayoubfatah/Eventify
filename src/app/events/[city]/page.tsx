@@ -6,21 +6,20 @@ import { Suspense } from "react";
 import { z } from "zod";
 
 type Props = {
-  params: Promise<{
+  params: {
     city: string;
-  }>;
+  };
 };
 
 type EventPageProps = Props & {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const pageNumberSchema = z.coerce.number().int().positive().optional();
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { city } = await params;
+  const { city } = params;
 
-  console.log(city);
   return {
     title: city === "all" ? `All the events` : `Events in ${city}`,
   };
@@ -35,8 +34,7 @@ export default async function EventsPage({
   searchParams,
 }: EventPageProps) {
   const { city } = await params;
-  const searchParamsData = await searchParams;
-  const parsedPage = pageNumberSchema.safeParse(searchParamsData.page);
+  const parsedPage = pageNumberSchema.safeParse(searchParams.page);
   if (!parsedPage.success) {
     throw new Error("invalid page number");
   }
