@@ -2,6 +2,7 @@ import EventCard from "@/components/ui/EventCard";
 import { getEvent } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 
+
 type EventParams = {
   slug: string;
 };
@@ -22,6 +23,7 @@ export async function generateStaticParams() {
     { slug: "fashion-runway" },
   ];
 }
+
 
 export default async function Page({ params }: { params: EventParams }) {
   const { slug } = params;
