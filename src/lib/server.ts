@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import prisma from "./prisma";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
 
 export async function getEvents(city: string, page = 1) {
+  "use cache";
+  cacheLife("hours");
   const events = await prisma.eventifyEvent.findMany({
     where: {
       city:
@@ -31,6 +34,8 @@ export async function getEvents(city: string, page = 1) {
 }
 
 export async function getEvent(slug: string) {
+  "use cache";
+  cacheLife("hours");
   const event = await prisma.eventifyEvent.findUnique({
     where: { slug: slug },
   });

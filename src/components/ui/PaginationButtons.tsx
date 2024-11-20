@@ -1,5 +1,5 @@
 "use client";
-import { div } from "framer-motion/client";
+
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 

@@ -3,9 +3,9 @@ import { getEvent } from "@/lib/server";
 import { notFound } from "next/navigation";
 
 type EventPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({ params }: EventPageProps) {
@@ -15,6 +15,16 @@ export async function generateMetadata({ params }: EventPageProps) {
 
   return { title: ` ${event.name} event ` };
 }
+
+export async function generateStaticParams() {
+  // most popular events
+  return [
+    { slug: "comedy-extravaganza" },
+    { slug: "film-buffs-symposium" },
+    { slug: "fashion-runway" },
+  ];
+}
+
 export default async function page({ params }: EventPageProps) {
   const { slug } = await params;
   const event = await getEvent(slug);

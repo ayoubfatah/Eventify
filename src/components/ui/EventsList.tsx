@@ -2,8 +2,9 @@ import React from "react";
 import EventsCard from "./eventsCard";
 
 import { getEvents } from "@/lib/server";
-import CityNotFound from "./cityNotFound";
+
 import PaginationButtons from "./PaginationButtons";
+import CityNotFound from "./cityNotFound";
 
 export default async function EventsList({
   city,
@@ -16,7 +17,8 @@ export default async function EventsList({
   const previousPath = page > 1 ? `/events/${city}?page=${page - 1}` : "";
   const nextPath =
     totalCount > 6 * page ? `/events/${city}?page=${page + 1}` : "";
-  if (events.length <= 0) return <CityNotFound city={city} />;
+
+  if (events.length <= 0) return <CityNotFound />;
 
   return (
     <>
