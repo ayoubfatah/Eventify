@@ -7,7 +7,7 @@ import { z } from "zod";
 
 type Props = {
   params: {
-    city: string;
+    city: Promise<string>;
   };
 };
 
@@ -18,7 +18,8 @@ type EventPageProps = Props & {
 const pageNumberSchema = z.coerce.number().int().positive().optional();
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { city } = params;
+  const param = await params;
+  const city = await param.city;
 
   return {
     title: city === "all" ? `All the events` : `Events in ${city}`,
@@ -33,8 +34,10 @@ export default async function EventsPage({
   params,
   searchParams,
 }: EventPageProps) {
-  const { city } = await params;
-  const parsedPage = pageNumberSchema.safeParse(searchParams.page);
+  const param = await params;
+  const city = await param.city;
+  const searchParam = await searchParams;
+  const parsedPage = pageNumberSchema.safeParse(searchParam.page);
   if (!parsedPage.success) {
     throw new Error("invalid page number");
   }
