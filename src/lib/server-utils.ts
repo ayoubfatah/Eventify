@@ -1,3 +1,4 @@
+import "server-only";
 import { notFound } from "next/navigation";
 import prisma from "./prisma";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";

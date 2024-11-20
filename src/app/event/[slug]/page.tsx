@@ -1,5 +1,5 @@
 import EventCard from "@/components/ui/EventCard";
-import { getEvent } from "@/lib/server";
+import { getEvent } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 
 type EventPageProps = {

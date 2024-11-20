@@ -1,7 +1,7 @@
 import React from "react";
 import EventsCard from "./eventsCard";
 
-import { getEvents } from "@/lib/server";
+import { getEvents } from "@/lib/server-utils";
 
 import PaginationButtons from "./PaginationButtons";
 import CityNotFound from "./cityNotFound";
