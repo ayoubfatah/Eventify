@@ -19,7 +19,7 @@ export default function Navbar() {
   const activePathname = usePathname();
 
   return (
-    <header className="flex justify-between   py-5 items-center font-semibold container mx-auto">
+    <header className="-translate-y-10 xs:translate-y-0  mb-10 xs:flex justify-between   py-5 items-center font-semibold container mx-auto">
       <span>
         <Link href={"/"}>Logo</Link>
       </span>

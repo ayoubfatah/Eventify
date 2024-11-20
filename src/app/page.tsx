@@ -4,9 +4,9 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="  relative h-full  flex justify-center items-center flex-col gap-3 py-36 ">
+    <div className=" relative h-full  flex justify-center items-center flex-col gap-3 py-36 ">
       <H1> Find events around you</H1>
-      <p className="text-[20px] font-bold opacity-80">
+      <p className="text-[13px] md:text-[18px] sm:text-[15px]  xs:text-[15px] font-bold opacity-80">
         Browse More than{" "}
         <span className="underline italic text-primary font-extrabold ">
           {" "}
@@ -15,7 +15,7 @@ export default function Home() {
         around you
       </p>
       <Form />
-      <section className="mt-4 flex gap-x-4 text-slate-500/80">
+      <section className="text-[13px] xs:text-sm mt-4 flex gap-x-4 text-slate-500/80">
         <p>Popular:</p>
         <div className="space-x-2 text-slate-500">
           <Link href={"/events/marrakesh"}>Marrakesh</Link>

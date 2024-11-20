@@ -15,7 +15,7 @@ export default function Form() {
   return (
     <form onSubmit={handleSubmit} className="mt-5 " action="">
       <input
-        className=" py-2 px-3 w-[400px] h-14 bg-white/[4%]  text-center   ring-[1px] ring-primary outline-none rounded-full"
+        className="text-[13px] xs:text-[16px] py-2 px-3 w-[200px] xs:w-[300px] sm:w-[350px] h-14 bg-white/[4%] text-center ring-[1px] ring-primary outline-none rounded-full"
         type="text"
         name="city"
         placeholder="Search events in any city..."
