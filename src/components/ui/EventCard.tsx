@@ -1,14 +1,12 @@
-"use client";
 import { type EventifyEvent } from "@prisma/client";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 
 export default function EventCard({ data }: { data: EventifyEvent }) {
   return (
-    <article className=" sm:mt-[195px]  2lg:grid  2lg:grid-cols-[500px,1fr] 2lg:mt-0 relative ">
+    <article className=" mt-[60px] sm:mt-[195px]  2lg:grid  2lg:grid-cols-[500px,1fr] 2lg:mt-0 relative ">
       <div className="relative  flex justify-center items-center w-full h-[350px] 2lg:[380px]  2lg:w-[500px] lg:-min-h-[350px]">
         <Image
-          priority
           className=" object-cover w-full h-full"
           src={data.imageUrl}
           alt={data.slug}

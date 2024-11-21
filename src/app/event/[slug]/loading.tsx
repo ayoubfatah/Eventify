@@ -1,8 +1,8 @@
 export default function loading() {
   return (
-    <main className="h-[calc(100vh-8rem)]  flex justify-center items-center">
-      <article className="grid grid-cols-[450px,600px] relative state-effects">
-        <div className="bg-white/10 animate-pulse h-full"></div>
+    <main className=" flex  justify-center items-center">
+      <article className="flex w-full flex-col lg:grid lg:grid-cols-[450px,600px] relative state-effects">
+        <div className=" h-[350px] w-full lg:h-full lg:w-full bg-white/10 animate-pulse "></div>
 
         <section className=" flex flex-col justify-center px-8">
           <div className="py-4">
