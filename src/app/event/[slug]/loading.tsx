@@ -1,6 +1,6 @@
 export default function loading() {
   return (
-    <main className=" flex  justify-center items-center">
+    <main className=" lg:h-[calc(100vh-8rem)]  flex  justify-center items-center">
       <article className="flex w-full flex-col lg:grid lg:grid-cols-[450px,600px] relative state-effects">
         <div className=" h-[350px] w-full lg:h-full lg:w-full bg-white/10 animate-pulse "></div>
 
