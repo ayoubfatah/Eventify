@@ -2,7 +2,7 @@
 import { cn } from "@/utils/helpers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 
