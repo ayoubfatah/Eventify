@@ -1,8 +1,8 @@
+import Footer from "@/components/ui/footer";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
 import Navbar from "../components/ui/navbar";
-import Footer from "@/components/ui/footer";
+import "./globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "Stay updated with real-time events happening around you or worldwide. Discover, explore, and never miss out on what's happening now!",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

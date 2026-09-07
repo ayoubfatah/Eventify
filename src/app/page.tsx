@@ -2,7 +2,7 @@ import Form from "@/components/ui/Form";
 import H1 from "@/components/ui/h1";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className=" relative h-full  flex justify-center items-center flex-col gap-3 py-36 ">
       <H1> Find events around you</H1>

@@ -13,7 +13,7 @@ type Routes = {
 
 const routes: Routes[] = [
   { name: "Home", path: "/" },
-  { name: "All Events", path: "/events/all" },
+  { name: "All Events", path: "/events" },
   { name: "explore", path: "/explore" },
 ];
 export default function Navbar() {
@@ -28,7 +28,9 @@ export default function Navbar() {
     <header className="overflow-hidden flex justify-between py-5 items-center font-semibold container mx-auto">
       {/* Logo */}
       <span>
-        <Link href={"/"}>Logo</Link>
+        <Link href={"/"} className="text-primary font-bold text-2xl">
+          Eventify
+        </Link>
       </span>
 
       {/* Big Screen Navigation */}

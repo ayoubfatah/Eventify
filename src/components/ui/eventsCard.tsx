@@ -1,14 +1,14 @@
 "use client";
-import { type EventifyEvent } from "@prisma/client";
+import { Event } from "@/lib/types";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 const MotionLink = motion(Link);
 
-export default function EventsCard({ event }: { event: EventifyEvent }) {
+export default function EventsCard({ event }: { event: Event }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -20,7 +20,7 @@ export default function EventsCard({ event }: { event: EventifyEvent }) {
     <MotionLink
       ref={ref}
       initial={{ opacity: 0, scale: 0.8 }}
-      href={`/event/${event.slug}`}
+      href={`/event/${event?.slug}`}
       style={{ scale, opacity }}
       className="relative w-full  flex "
     >
@@ -30,23 +30,25 @@ export default function EventsCard({ event }: { event: EventifyEvent }) {
             priority={true}
             className="w-full h-[60%] object-cover"
             alt="event"
-            src={event.imageUrl}
+            src={event?.imageUrl || ""}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           />
         </div>
         <section className="h-1/2 flex  items-center flex-col pt-10">
-          <h2 className="text-2xl lg:text-3xl font-semibold ">{event.name}</h2>
-          <span className="text-white/70">By {event.organizerName}</span>
-          <span className=" text-white/50">{event.location}</span>
+          <h2 className="text-2xl lg:text-3xl font-semibold ">{event?.name}</h2>
+          <span className="text-white/70">By {event?.organizerName}</span>
+          <span className=" text-white/50">{event?.location}</span>
         </section>
 
         <section className="absolute bg-black/70 left-[12px] top-[12px] h-[45px] w-[45px]  text-center flex flex-col items-center rounded-md  ">
           <span className="font-bold text-xl -mb-[5px]">
-            {new Date(event.date).toLocaleString("en-US", { day: "2-digit" })}
+            {new Date(event!.date).toLocaleString("en-US", {
+              day: "2-digit",
+            })}
           </span>
           <span className=" text-xs uppercase text-primary">
-            {new Date(event.date)
+            {new Date(event!.date)
               .toLocaleString("en-US", { month: "short" })
               .toUpperCase()}
           </span>

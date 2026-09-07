@@ -1,44 +1,32 @@
-import "server-only";
 import { notFound } from "next/navigation";
-import prisma from "./prisma";
-import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import "server-only";
+import type { Event } from "./types";
 
-export async function getEvents(city: string, page = 1) {
-  "use cache";
-  cacheLife("hours");
-  const events = await prisma.eventifyEvent.findMany({
-    where: {
-      city:
-        city == "all"
-          ? undefined
-          : city.charAt(0).toUpperCase() + city.slice(1),
-    },
-    orderBy: {
-      date: "asc",
-    },
-    take: 9,
-    skip: (page - 1) * 6,
-  });
-  let totalCount;
-  if (city === "all") {
-    totalCount = await prisma.eventifyEvent.count();
-  } else {
-    totalCount = await prisma.eventifyEvent.count({
-      where: { city: city.charAt(0).toUpperCase() + city.slice(1) },
-    });
-  }
+const API_URL = "http://localhost:8080";
 
-  if (!events) {
-    notFound();
-  }
-  return { events, totalCount };
+export async function getEvents(): Promise<{
+  // city: string,
+  // page = 1,
+  events: Event[];
+  // totalCount: number;
+}> {
+  const response = await fetch(`${API_URL}/events`);
+
+  const data = await response.json();
+
+  return {
+    events: data.events,
+  };
 }
 
-export async function getEvent(slug: string) {
-  "use cache";
-  cacheLife("hours");
-  const event = await prisma.eventifyEvent.findUnique({
-    where: { slug: slug },
-  });
+export async function getEvent(slug: string): Promise<Event> {
+  const response = await fetch(`${API_URL}/events/${slug}`);
+
+  if (!response.ok) {
+    notFound();
+  }
+
+  const { event } = await response.json();
+
   return event;
 }

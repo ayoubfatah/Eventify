@@ -12,7 +12,7 @@ export default function CityNotFound() {
             Sorry, we can&apos;t find any events . You&apos;ll find lots to
             explore on the events page.{" "}
           </p>
-          <Link href={"/events/all"}>
+          <Link href={"/events"}>
             <button className="  border border-primary py-4 px-8 hover:bg-primary  transition-all duration-200 ease-linear">
               Go back to the events page
             </button>

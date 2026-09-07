@@ -1,8 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL("/events/all", request.url));
+  console.log(request);
 }
-export const config = {
-  matcher: ["/events"],
-};
