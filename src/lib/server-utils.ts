@@ -19,6 +19,21 @@ export async function getEvents(): Promise<{
   };
 }
 
+export async function getEventsByCityName(city: string): Promise<{
+  // city: string,
+  // page = 1,
+  events: Event[];
+  // totalCount: number;
+}> {
+  const response = await fetch(`${API_URL}/events/city/${city}`);
+
+  const data = await response.json();
+
+  return {
+    events: data.events,
+  };
+}
+
 export async function getEvent(slug: string): Promise<Event> {
   const response = await fetch(`${API_URL}/events/${slug}`);
 

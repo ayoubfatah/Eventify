@@ -8,8 +8,11 @@ export default function Form() {
   const [city, setCity] = useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const capitalize = (city: string) =>
+      city.charAt(0).toUpperCase() + city.slice(1);
+
     e.preventDefault();
-    router.push(`/events/${city}`);
+    router.push(`/events/${capitalize(city)}`);
   }
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 import { Event } from "@/lib/types";
+import { cn } from "@/utils/helpers";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +9,14 @@ import { useRef } from "react";
 
 const MotionLink = motion(Link);
 
-export default function EventsCard({ event }: { event: Event }) {
+export default function EventsCard({
+  event,
+  isInPast,
+}: {
+  event: Event;
+  isInPast: boolean;
+}) {
+  console.log(isInPast);
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -22,10 +30,14 @@ export default function EventsCard({ event }: { event: Event }) {
       initial={{ opacity: 0, scale: 0.8 }}
       href={`/event/${event?.slug}`}
       style={{ scale, opacity }}
-      className="relative w-full  flex "
+      className={cn("relative w-full  flex ", {})}
     >
       <article className="relative h-[350px] w-full bg-[#232323] flex flex-col rounded-md overflow-hidden  hover:scale-105  transition-scale  active:scale-[1.02] duration-300 cursor-pointer">
-        <div className="h-[60%] relative">
+        <div
+          className={cn("h-[60%] relative", {
+            grayscale: isInPast,
+          })}
+        >
           <Image
             priority={true}
             className="w-full h-[60%] object-cover"
@@ -36,23 +48,31 @@ export default function EventsCard({ event }: { event: Event }) {
           />
         </div>
         <section className="h-1/2 flex  items-center flex-col pt-10">
+          <h2 className="text-white">{isInPast ? "true " : "false"}</h2>
           <h2 className="text-2xl lg:text-3xl font-semibold ">{event?.name}</h2>
           <span className="text-white/70">By {event?.organizerName}</span>
           <span className=" text-white/50">{event?.location}</span>
         </section>
 
-        <section className="absolute bg-black/70 left-[12px] top-[12px] h-[45px] w-[45px]  text-center flex flex-col items-center rounded-md  ">
-          <span className="font-bold text-xl -mb-[5px]">
-            {new Date(event!.date).toLocaleString("en-US", {
-              day: "2-digit",
-            })}
-          </span>
-          <span className=" text-xs uppercase text-primary">
-            {new Date(event!.date)
-              .toLocaleString("en-US", { month: "short" })
-              .toUpperCase()}
-          </span>
-        </section>
+        {isInPast && (
+          <div className="absolute bg-black/70 right-[12px] top-[12px]  text-center z-999999 flex flex-col items-center rounded-md  ">
+            <span className="font-bold   py-1 px-3 text-primary">Ended</span>
+          </div>
+        )}
+        {!isInPast && (
+          <section className="absolute bg-black/70 left-[12px] top-[12px] h-[45px] w-[45px]  text-center flex flex-col items-center rounded-md  ">
+            <span className="font-bold text-xl -mb-[5px]">
+              {new Date(event!.date).toLocaleString("en-US", {
+                day: "2-digit",
+              })}
+            </span>
+            <span className=" text-xs uppercase text-primary">
+              {new Date(event!.date)
+                .toLocaleString("en-US", { month: "short" })
+                .toUpperCase()}
+            </span>
+          </section>
+        )}
       </article>
     </MotionLink>
   );
