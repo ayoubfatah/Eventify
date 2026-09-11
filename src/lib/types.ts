@@ -4,7 +4,7 @@ export type Event = {
   slug: string;
   city: string;
   location: string;
-  date: Date;
+  date: Date | string;
   organizerName: string;
   imageUrl: string;
   description: string;
