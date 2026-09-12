@@ -1,75 +1,140 @@
-import { setTokenToCookies } from "@/lib/cookies";
-import { login } from "@/lib/server-auth-utils";
+"use client";
+
 import {
-  Children,
   createContext,
   ReactNode,
+  useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
-type UserData =
-  | {
-      firstName: string;
-      secondName: string;
-      userName: string;
-      email: string;
-      password: string;
-    }
-  | undefined;
+import { login } from "@/lib/server-auth-utils";
+import { removeTokenFromCookies, setTokenToCookies } from "@/lib/cookies";
+import { getCurrentUser } from "@/lib/getUser";
 
-const AuthContext = createContext<{
-  user: UserData;
-  isLoading: boolean;
-  error: string;
-  loginUser: (data: LoginData) => Promise<void>;
-} | null>(null);
+type UserData = {
+  id: number;
+  firstName: string;
+  secondName: string;
+  userName: string;
+  email: string;
+} | null;
 
 type LoginData = {
   email: string;
   password: string;
 };
 
+type AuthContextType = {
+  user: UserData;
+  isLoading: boolean;
+  error: string;
+  loginUser: (data: LoginData) => Promise<void>;
+  logOut: () => Promise<void>;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  // sing up
-  //  we need email and the details
-  // then we need a api function  hits the rest api
-  // thats it ofr sign up
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<UserData>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [user, setUser] = useState<UserData>();
 
-  async function loginUser(data: LoginData) {
+  /*
+   * Login
+   */
+  const loginUser = useCallback(async (data: LoginData) => {
     try {
       setIsLoading(true);
-      const { user, token } = await login(data);
-      setUser(user);
+      setError("");
+
+      // 1. Login and get JWT
+      const { token } = await login(data);
+
+      // 2. Save JWT in cookies
       await setTokenToCookies(token);
+
+      // 3. Get the newly authenticated user
+      const currentUser = await getCurrentUser();
+
+      // 4. Store user in React state
+      setUser(currentUser);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
+      } else {
+        setError("Something went wrong");
       }
-      setIsLoading(false);
+
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
 
- async function logOut(){
-    
- }
+  /*
+   * Restore user when the app starts
+   * or when the page is refreshed.
+   */
+  useEffect(() => {
+    async function restoreUser() {
+      try {
+        setIsLoading(true);
+
+        const currentUser = await getCurrentUser();
+
+        setUser(currentUser);
+      } catch {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    restoreUser();
+  }, []);
+
+  /*
+   * Logout
+   */
+  const logOut = useCallback(async () => {
+    try {
+      setIsLoading(true);
+
+      await removeTokenFromCookies();
+
+      setUser(null);
+      setError("");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, error, loginUser }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        error,
+        loginUser,
+        logOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
+/*
+ * Auth hook
+ */
 export function useAuth() {
   const context = useContext(AuthContext);
+
   if (!context) {
-    throw new Error("Can't access auth context data outside its provider");
+    throw new Error("Can't access auth context outside its provider");
   }
+
   return context;
 }

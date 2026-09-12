@@ -1,7 +1,6 @@
 "use client";
 import H1 from "@/components/ui/h1";
 import { useAuth } from "@/context/AuthProvider";
-import { login } from "@/lib/server-auth-utils";
 import { FormEvent, useState } from "react";
 export default function Page() {
   const [email, setEmail] = useState("sss@gmail.com");

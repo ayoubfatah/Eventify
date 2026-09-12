@@ -22,7 +22,9 @@ export default function EventCard({ data, isOwner = true }: EventCardProps) {
       const result = await updateEvent(updatedData);
 
       setEventData(result.event);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

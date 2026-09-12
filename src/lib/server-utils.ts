@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Event } from "./types";
 import { NonNullEvent } from "@/components/ui/EditEventForm";
+import { getTokenFromCookies } from "./cookies";
 
 const API_URL = "http://localhost:8080";
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzc0BnbWFpbC5jb20iLCJleHAiOjE3ODg2ODYxNjQsInVzZXJJZCI6MX0.c8YCfo7_xggj8PVllE2QfReImjwO0KrxUPMO5OQv1VweyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzc0BnbWFpbC5jb20iLCJleHAiOjE3ODg2ODYxNjQsInVzZXJJZCI6MX0.c8YCfo7_xggj8PVllE2QfReImjwO0KrxUPMO5OQv1Vw";
+
 export async function getEvents(): Promise<{
   // city: string,
   // page = 1,
@@ -48,11 +48,12 @@ export async function getEvent(slug: string): Promise<Event> {
 }
 
 export async function updateEvent(data: NonNullEvent) {
+  const token = await getTokenFromCookies();
   const response = await fetch(`${API_URL}/events/${data.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: TOKEN,
+      Authorization: token!,
     },
     body: JSON.stringify(data),
   });
@@ -65,28 +66,57 @@ export async function updateEvent(data: NonNullEvent) {
 }
 
 export async function reserveEvent(eventId: string) {
+  const token = await getTokenFromCookies();
+
   const response = await fetch(`${API_URL}/registration/${eventId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: TOKEN,
+      Authorization: token!,
     },
   });
-  console.log(response);
 
   return response.json();
 }
 
+export async function getCurrentUserEvents() {
+  const token = await getTokenFromCookies();
+
+  try {
+    const response = await fetch("http://localhost:8080/events/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token!,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Couldn't fetch user's events");
+    }
+
+    return data.events;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+}
+
 export async function cancelEvent(eventId: string) {
+  const token = await getTokenFromCookies();
+
   const response = await fetch(`${API_URL}/registration/${eventId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      Authorization: TOKEN,
+      Authorization: token!,
     },
   });
-  console.log(response);
+
   return response.json();
 }
-
-

@@ -1,11 +1,13 @@
 "use client";
 
+import { useAuth } from "@/context/AuthProvider";
+import { useClickOutside } from "@/hooks/useClickOutside";
 import { cn } from "@/utils/helpers";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Plus, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { ChevronDown, Plus, User } from "lucide-react";
+import { useRef, useState } from "react";
 
 type Routes = {
   name: string;
@@ -22,8 +24,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  // TODO: Replace this with your actual authentication logic
-  const isLoggedIn = true;
+  const ref = useRef(null);
+
+  useClickOutside(ref, () => setUserMenuOpen(false));
+
+  const { user, logOut, isLoading } = useAuth();
+
+  const isLoggedIn = !!user;
 
   const activePathname = usePathname();
 
@@ -68,100 +75,103 @@ export default function Navbar() {
       </nav>
 
       {/* Auth Buttons / User Menu */}
-      <div className="hidden sm:flex items-center gap-3">
-        {!isLoggedIn ? (
-          <>
-            <Link
-              href="/login"
-              className="px-4 py-2 rounded-lg text-white/70 hover:text-white transition"
-            >
-              Login
-            </Link>
+      {isLoading ? (
+        <div className="flex items-center gap-2 px-3 py-2">
+          {" "}
+          <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />{" "}
+          <div className="w-20 h-4 rounded-md bg-white/10 animate-pulse" />{" "}
+        </div>
+      ) : (
+        <div className="hidden sm:flex items-center gap-3">
+          {!isLoggedIn ? (
+            <>
+              <Link
+                href="/login"
+                className="px-4 py-2 rounded-lg text-white/70 hover:text-white transition"
+              >
+                Login
+              </Link>
 
-            <Link
-              href="/signup"
-              className="px-5 py-2 rounded-full hover:text-pri bg-primary text-white hover:opacity-90 transition"
-            >
-              Sign Up
-            </Link>
-          </>
-        ) : (
-          <div className="relative">
-            {/* User button */}
-            <button
-              onClick={() => setUserMenuOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition"
-            >
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <User size={17} />
-              </div>
+              <Link
+                href="/signup"
+                className="px-5 py-2 rounded-full hover:text-pri bg-primary text-white hover:opacity-90 transition"
+              >
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <div className="relative">
+              {/* User button */}
+              <button
+                onClick={() => setUserMenuOpen((prev) => !prev)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition"
+              >
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                  <User size={17} />
+                </div>
 
-              <span className="text-white">John</span>
+                <span className="text-white">{user.firstName}</span>
 
-              <ChevronDown
-                size={17}
-                className={cn("transition-transform", {
-                  "rotate-180": userMenuOpen,
-                })}
-              />
-            </button>
+                <ChevronDown
+                  size={17}
+                  className={cn("transition-transform", {
+                    "rotate-180": userMenuOpen,
+                  })}
+                />
+              </button>
 
-            {/* Dropdown */}
-            <AnimatePresence>
-              {userMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute  z-[9999999] bg-black right-0 mt-2 w-48 rounded-xl  border border-primary shadow-xl  "
-                >
-                  <div className="px-4 py-3 border-b border-black/10">
-                    <p className="font-semibold text-gray-50 ">John Doe</p>
-                    <p className="text-sm text-gray-50 /50">john@example.com</p>
-                  </div>
+              {/* Dropdown */}
+              <AnimatePresence>
+                {userMenuOpen && (
+                  <motion.div
+                    ref={ref}
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute  z-[9999999] bg-black right-0 mt-2 w-48 rounded-xl  border  border-primary shadow-xl  "
+                  >
+                    <div className="px-4 py-3 border-b border-black/10">
+                      <p className="font-semibold text-gray-50 ">
+                        {user.firstName} {user.secondName}{" "}
+                      </p>
+                      <p className="text-sm text-gray-50 /50">{user.email}</p>
+                    </div>
 
-                  <div className="p-1">
-                    <Link
-                      href="/profile"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
-                    >
-                      Profile
-                    </Link>
+                    <div className="p-1">
+                      <Link
+                        href="/profile"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
+                      >
+                        Profile
+                      </Link>
 
-                    <Link
-                      href="/my-events"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
-                    >
-                      My Events
-                    </Link>
+                      <Link
+                        href="/my-events"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
+                      >
+                        My Events
+                      </Link>
 
-                    <Link
-                      href="/settings"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-gray-50  cursor-pointer hover:bg-white/5 transition"
-                    >
-                      Settings
-                    </Link>
-
-                    <button
-                      onClick={() => {
-                        // TODO: Add logout logic
-                        setUserMenuOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-lg cursor-pointer  text-red-500 hover:!bg-red-500/10 transition"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
-      </div>
+                      <button
+                        onClick={() => {
+                          logOut();
+                          setUserMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-lg cursor-pointer  text-red-500 hover:!bg-red-500/10 transition"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Mobile Navigation */}
       <div className="relative block sm:hidden">

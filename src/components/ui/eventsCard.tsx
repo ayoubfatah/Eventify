@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const MotionLink = motion(Link);
 
@@ -16,7 +16,8 @@ export default function EventsCard({
   event: Event;
   isInPast: boolean;
 }) {
-  console.log(isInPast);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -73,6 +74,27 @@ export default function EventsCard({
             </span>
           </section>
         )}
+        <div className=" right-3 z-10 flex  mt-4">
+          <Link
+            href={`/event/${event?.slug}/edit`}
+            onClick={(e) => e.stopPropagation()}
+            className=" bg-primary block w-full text-center px-3 py-2 text-sm text-white hover:bg-primary/9s0"
+          >
+            Edit
+          </Link>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              // delete logic here
+            }}
+            className=" bg-red-500/80 block w-full text-center px-3 py-2 text-sm text-white hover:bg-red-500"
+          >
+            Delete
+          </button>
+        </div>
       </article>
     </MotionLink>
   );

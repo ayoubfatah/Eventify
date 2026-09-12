@@ -6,7 +6,7 @@ export type UserData = {
   password: string;
 };
 
-const API_URL = "http://localhost:8080";
+// const API_URL = "http://localhost:8080";
 
 export async function signUp(data: UserData) {
   const response = await fetch("http://localhost:8080/signup", {
