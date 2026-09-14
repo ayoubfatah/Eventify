@@ -1,6 +1,6 @@
 import EventCard from "@/components/ui/EventCard";
 import EventSkeleton from "@/components/ui/eventSkeleton";
-import { getEvent } from "@/lib/server-utils";
+import { getEvent, getEventReservation } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -22,6 +22,8 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const event = await getEvent(slug);
+  const reserved = await getEventReservation(event?.id as number);
+  console.log(reserved);
   if (!event) return notFound();
 
   return (

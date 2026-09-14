@@ -11,7 +11,7 @@ export async function getEvents(): Promise<{
   events: Event[];
   // totalCount: number;
 }> {
-  const response = await fetch(`${API_URL}/events`);
+  const response = await fetch(`${API_URL}/events?page=2&limit=4`);
 
   const data = await response.json();
 
@@ -166,6 +166,104 @@ export async function deleteEvent(eventId: number) {
     }
 
     return data.events;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+}
+
+//  reservation
+
+export async function registerForEvent(eventId: number): Promise<string> {
+  const token = await getTokenFromCookies();
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/registration/${eventId}`,
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token!,
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Couldn't register for event");
+    }
+
+    return data.message;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+}
+
+export async function cancelEventRegistration(
+  eventId: number,
+): Promise<string> {
+  const token = await getTokenFromCookies();
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/registration/${eventId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token!,
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Couldn't cancel event registration");
+    }
+
+    return data.message;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Something went wrong");
+  }
+}
+
+export async function getEventReservation(eventId: number): Promise<boolean> {
+  const token = await getTokenFromCookies();
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/registration/${eventId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token!,
+        },
+      },
+    );
+
+    const data = await response.json();
+    console.log(data, "Data");
+    if (!response.ok) {
+      throw new Error(data.message || "Couldn't check event reservation");
+    }
+
+    return data.reserved as boolean;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
