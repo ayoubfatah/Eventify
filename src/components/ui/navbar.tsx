@@ -140,11 +140,11 @@ export default function Navbar() {
 
                     <div className="p-1">
                       <Link
-                        href="/profile"
+                        href="/add-event"
                         onClick={() => setUserMenuOpen(false)}
                         className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
                       >
-                        Profile
+                        Add event
                       </Link>
 
                       <Link
@@ -279,11 +279,11 @@ export default function Navbar() {
                   ) : (
                     <>
                       <Link
-                        href="/profile"
+                        href="/add-event"
                         onClick={() => setIsOpen(false)}
                         className="text-xl font-semibold text-black"
                       >
-                        Profile
+                        Add Event
                       </Link>
 
                       <Link

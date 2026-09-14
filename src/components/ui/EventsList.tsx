@@ -4,10 +4,17 @@ import { Event } from "@/lib/types";
 import { isPast } from "date-fns";
 import CityNotFound from "./cityNotFound";
 
-export default async function EventsList({ events }: { events: Event[] }) {
+export default async function EventsList({
+  events,
+  actions,
+}: {
+  events: Event[];
+  actions: boolean;
+}) {
   // const previousPath = page > 1 ? `/events/${city}?page=${page - 1}` : "";
   // const nextPath =
   //   totalCount > 6 * page ? `/events/${city}?page=${page + 1}` : "";
+
 
   if (!events || events?.length === 0) return <CityNotFound />;
 
@@ -18,7 +25,12 @@ export default async function EventsList({ events }: { events: Event[] }) {
           const isInPast = isPast(event!.date);
 
           return (
-            <EventsCard isInPast={isInPast} key={event?.id} event={event} />
+            <EventsCard
+              actions={actions}
+              isInPast={isInPast}
+              key={event?.id}
+              event={event}
+            />
           );
         })}
       </div>

@@ -10,4 +10,5 @@ export type Event = {
   description: string;
   createdAt: Date;
   updatedAt: Date;
+  userId: number;
 } | null;

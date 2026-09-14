@@ -1,17 +1,28 @@
 "use client";
 import H1 from "@/components/ui/h1";
 import { useAuth } from "@/context/AuthProvider";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 export default function Page() {
   const [email, setEmail] = useState("sss@gmail.com");
   const [password, setPassword] = useState("12345678");
 
-  const { isLoading, error, loginUser } = useAuth();
+  const { isLoading, error, loginUser, user } = useAuth();
+  const router = useRouter();
 
+  if (user) {
+    router.push("/events");
+    router.refresh();
+  }
   //
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     await loginUser({ password, email });
+
+    if (user) {
+      router.push("/events");
+      router.refresh();
+    }
   }
 
   return (

@@ -2,34 +2,46 @@
 import { reserveEvent, updateEvent } from "@/lib/server-utils";
 import { Event } from "@/lib/types";
 import { cn } from "@/utils/helpers";
-import { Clock, Edit, MapPin } from "lucide-react";
+import { Clock, Edit, MapPin, Trash } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import EditEventForm, { NonNullEvent } from "./EditEventForm";
+import { useAuth } from "@/context/AuthProvider";
+import EventSkeleton from "./eventSkeleton";
+import { toast } from "sonner";
 
 interface EventCardProps {
   data: Event;
-  isOwner?: boolean; // Add this prop to check if current user is the owner
 }
 
-export default function EventCard({ data, isOwner = true }: EventCardProps) {
+export default function EventCard({ data }: EventCardProps) {
   const [isReserved, setIsReserved] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [eventData, setEventData] = useState(data);
+  const { user, isLoading } = useAuth();
 
   const handleSaveEdit = async (updatedData: NonNullEvent) => {
     try {
       const result = await updateEvent(updatedData);
+      toast.success("Event edited successfully!");
 
       setEventData(result.event);
+      setTimeout(() => {
+        setIsEditOpen(false);
+      }, 0);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const isOwner = eventData?.userId === user?.id;
+
+  if (isLoading) {
+    return <EventSkeleton />;
+  }
   return (
     <>
-      <article className="relative w-full h-screen md:h-[600px] flex items-center justify-center overflow-hidden">
+      <article className="relative w-full h-screen md:h-[600px] border border-primary flex items-center justify-center overflow-hidden">
         {/* Blurred background image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -47,15 +59,29 @@ export default function EventCard({ data, isOwner = true }: EventCardProps) {
 
         {/* Edit Button - Only show if owner */}
         {isOwner && (
-          <button
-            onClick={() => setIsEditOpen(true)}
-            className="absolute top-6 right-6 z-20 p-3 bg-primary hover:bg-primary/90 text-black rounded-lg transition-all duration-200 shadow-lg hover:shadow-primary/50 active:scale-95"
-            title="Edit event"
-          >
-            <Edit size={20} />
-          </button>
+          <>
+            <div className="absolute top-6 right-6 z-2000 flex gap-4">
+              <button
+                onClick={() => setIsEditOpen(true)}
+                className=" p-3 z-9999999 bg-primary hover:bg-primary/90 text-black rounded-lg transition-all duration-200 shadow-lg hover:shadow-primary/50 active:scale-95"
+                title="Edit event"
+              >
+                <Edit size={20} />
+              </button>
+              <button
+                onClick={() => setIsEditOpen(true)}
+                className=" p-3 bg-red-500 z-9999999   text-white rounded-lg transition-all duration-200 shadow-lg hover:shadow-red-500/50 active:scale-95"
+                title="Edit event"
+              >
+                <Trash size={20} />
+              </button>
+            </div>
+          </>
         )}
 
+        <div className="bottom-0 text-black font-semibold px-4 py-1.5 right-0 absolute bg-primary  z-9999">
+          Owned
+        </div>
         {/* Content container */}
         <div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:px-12 py-12">
           <div className="flex flex-col md:flex-row gap-12 items-start md:items-center">
@@ -136,26 +162,27 @@ export default function EventCard({ data, isOwner = true }: EventCardProps) {
                 </div>
               </div>
 
-              {/* CTA Button */}
-              <button
-                onClick={async () => {
-                  await reserveEvent(eventData!.id.toString());
-                  setIsReserved(!isReserved);
-                }}
-                className={cn(
-                  "w-full sm:w-auto px-8 md:px-10 py-4 text-black font-bold text-base md:text-lg rounded-lg transition-all duration-200 ease-linear hover:shadow-sm hover:shadow-primary/50 active:scale-95",
-                  {
-                    "bg-transparent border border-primary text-white":
-                      isReserved,
-                  },
-                  {
-                    "bg-primary border border-transparent hover:bg-primary/90":
-                      !isReserved,
-                  },
-                )}
-              >
-                {!isReserved ? "Reserve a ticket" : "Reserved"}
-              </button>
+              {!isOwner && (
+                <button
+                  onClick={async () => {
+                    await reserveEvent(eventData!.id.toString());
+                    setIsReserved(!isReserved);
+                  }}
+                  className={cn(
+                    "w-full sm:w-auto px-8 md:px-10 py-4 text-black font-bold text-base md:text-lg rounded-lg transition-all duration-200 ease-linear hover:shadow-sm hover:shadow-primary/50 active:scale-95",
+                    {
+                      "bg-transparent border border-primary text-white":
+                        isReserved,
+                    },
+                    {
+                      "bg-primary border border-transparent hover:bg-primary/90":
+                        !isReserved,
+                    },
+                  )}
+                >
+                  {!isReserved ? "Reserve a ticket" : "Reserved"}
+                </button>
+              )}
             </section>
           </div>
         </div>

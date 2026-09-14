@@ -79,7 +79,7 @@ export async function reserveEvent(eventId: string) {
   return response.json();
 }
 
-export async function getCurrentUserEvents() {
+export async function getCurrentUserEvents(): Promise<Event[]> {
   const token = await getTokenFromCookies();
 
   try {
@@ -97,7 +97,7 @@ export async function getCurrentUserEvents() {
       throw new Error(data.message || "Couldn't fetch user's events");
     }
 
-    return data.events;
+    return data.events as Event[];
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
@@ -119,4 +119,58 @@ export async function cancelEvent(eventId: string) {
   });
 
   return response.json();
+}
+
+// add event
+
+export async function addNewEvent(data: NonNullEvent) {
+  const token = await getTokenFromCookies();
+
+  const response = await fetch("http://localhost:8080/events", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token!,
+    },
+
+    body: JSON.stringify({
+      ...data,
+      date: new Date(data.date).toISOString(),
+    }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || "Failed to create event");
+  }
+  const createdEvent = await response.json();
+
+  return createdEvent;
+}
+
+export async function deleteEvent(eventId: number) {
+  const token = await getTokenFromCookies();
+
+  try {
+    const response = await fetch(`${API_URL}/events/${eventId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token!,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Couldn't delete the event");
+    }
+
+    return data.events;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Something went wrong");
+  }
 }

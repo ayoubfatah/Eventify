@@ -18,6 +18,7 @@ export default function EditEventForm({
   onClose,
   onSave,
 }: EditEventFormProps) {
+
   const [formData, setFormData] = useState<NonNullEvent>(data);
 
   const handleChange = (
