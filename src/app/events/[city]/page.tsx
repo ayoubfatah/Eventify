@@ -2,7 +2,7 @@ import EventsList from "@/components/ui/EventsList";
 import H1 from "@/components/ui/h1";
 import { getEventsByCityName } from "@/lib/server-utils";
 
-export default async function page({
+export default async function Page({
   params,
 }: {
   params: Promise<{ city: string }>;
@@ -16,7 +16,7 @@ export default async function page({
       {events?.length > 0 && (
         <H1 className="text-center py-10 ">All events in {city} </H1>
       )}
-      <EventsList events={events} />
+      <EventsList actions={false} events={events} />
     </main>
   );
 }

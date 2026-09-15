@@ -1,14 +1,11 @@
-"use client";
 import Footer from "@/components/ui/footer";
-import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "sonner";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "../components/ui/navbar";
 import "./globals.css";
-
-const queryClient = new QueryClient();
+import Providers from "./providers/providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,20 +18,11 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// export const metadata: Metadata = {
-//   title: "Eventify find events around you ",
-//   description:
-//     "Stay updated with real-time events happening around you or worldwide. Discover, explore, and never miss out on what's happening now!",
-// };
-
-let browserQueryClient: QueryClient | undefined;
-
-function getQueryClient() {
-  // Keep server requests isolated and preserve the browser cache across renders.
-  if (typeof window === "undefined") return new QueryClient();
-  browserQueryClient ??= new QueryClient();
-  return browserQueryClient;
-}
+export const metadata: Metadata = {
+  title: "Eventify find events around you ",
+  description:
+    "Stay updated with real-time events happening around you or worldwide. Discover, explore, and never miss out on what's happening now!",
+};
 
 export default function RootLayout({
   children,
@@ -43,25 +31,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <QueryClientProvider client={getQueryClient()}>
-        <AuthProvider>
-          <body className={`${geistSans.variable} ${geistMono.variable}   `}>
-            <Toaster
-              position="top-right"
-              theme="dark"
-              richColors
-              closeButton
-              visibleToasts={9} // Show more toasts at once
-              offset={16}
-            />
-            <div className=" flex flex-col min-h-screen max-w-7xl mx-auto ">
-              <Navbar />
-              <main className=" lg:flex-grow">{children}</main>
-              <Footer />
-            </div>
-          </body>
-        </AuthProvider>
-      </QueryClientProvider>
+      <Providers>
+        <body className={`${geistSans.variable} ${geistMono.variable}   `}>
+          <Toaster
+            position="top-right"
+            theme="dark"
+            richColors
+            closeButton
+            visibleToasts={9} // Show more toasts at once
+            offset={16}
+          />
+          <div className=" flex flex-col min-h-screen max-w-7xl mx-auto ">
+            <Navbar />
+            <main className=" lg:flex-grow">{children}</main>
+            <Footer />
+          </div>
+        </body>
+      </Providers>
     </html>
   );
 }

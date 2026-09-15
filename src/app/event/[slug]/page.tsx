@@ -1,19 +1,8 @@
 import EventCard from "@/components/ui/EventCard";
 import EventSkeleton from "@/components/ui/eventSkeleton";
-import { getEvent, getEventReservation } from "@/lib/server-utils";
+import { getEvent } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-
-type EventParams = {
-  slug: Promise<string>;
-};
-
-export async function generateMetadata({ params }: { params: EventParams }) {
-  const param = await params;
-  const slug = await param.slug;
-
-  return { title: `${slug.split("-").join(" ")} event` };
-}
 
 export default async function Page({
   params,
@@ -22,8 +11,7 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const event = await getEvent(slug);
-  const reserved = await getEventReservation(event?.id as number);
-  console.log(reserved);
+
   if (!event) return notFound();
 
   return (

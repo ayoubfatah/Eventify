@@ -6,10 +6,10 @@ import CityNotFound from "./cityNotFound";
 
 export default function EventsList({
   events,
-  actions,
+  actions = false,
 }: {
   events: Event[];
-  actions: boolean;
+  actions?: boolean;
 }) {
   // const previousPath = page > 1 ? `/events/${city}?page=${page - 1}` : "";
   // const nextPath =

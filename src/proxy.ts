@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     // i know this is not safe but  this is just for learning purposes  
     // its dangerous cause someone can just add a rndm token in cookies  
   const token = request.cookies.get("token")?.value;

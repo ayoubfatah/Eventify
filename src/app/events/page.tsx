@@ -1,25 +1,5 @@
 import H1 from "@/components/ui/h1";
-import { Metadata } from "next";
 import InfiniteEvents from "../reactQuery/InfiniteEvents";
-
-type Props = {
-  params: {
-    city: Promise<string>;
-  };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const param = await params;
-  const city = await param.city;
-
-  return {
-    title: city === "all" ? "All the events" : `Events in ${city}`,
-  };
-}
-
-export async function generateStaticParams() {
-  return [{ city: "Seattle" }, { city: "austin" }];
-}
 
 export default function EventsPage() {
   return (
