@@ -99,7 +99,12 @@ export default function EventCard({ data }: EventCardProps) {
 
   return (
     <>
-      <article className="relative w-full h-screen md:h-[600px] border border-primary flex items-center justify-center overflow-hidden">
+      <article
+        className={cn(
+          "relative w-full h-screen md:h-[600px]  flex items-center justify-center overflow-hidden",
+          { "border border-primary": isOwner },
+        )}
+      >
         <div className="absolute inset-0 z-0">
           <Image
             className="object-cover w-full h-full blur-md scale-110"
@@ -133,9 +138,11 @@ export default function EventCard({ data }: EventCardProps) {
           </div>
         )}
 
-        <div className="bottom-0 text-black font-semibold px-4 py-1.5 right-0 absolute bg-primary z-9999">
-          Owned
-        </div>
+        {isOwner && (
+          <div className="bottom-0 text-black font-semibold px-4 py-1.5 right-0 absolute bg-primary z-9999">
+            Owned
+          </div>
+        )}
 
         <div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:px-12 py-12">
           <div className="flex flex-col md:flex-row gap-12 items-start md:items-center">

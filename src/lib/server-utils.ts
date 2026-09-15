@@ -272,3 +272,23 @@ export async function getEventReservation(eventId: number): Promise<boolean> {
     throw new Error("Something went wrong");
   }
 }
+
+export async function getReservedEvents(): Promise<{
+  events: Event[];
+}> {
+  const token = await getTokenFromCookies();
+
+  const response = await fetch(`${API_URL}/events/registration`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token!,
+    },
+    cache: "no-store",
+  });
+  const data = await response.json();
+
+  return {
+    events: data.events,
+  };
+}

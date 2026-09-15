@@ -21,10 +21,10 @@ const EventCardSkeleton = () => {
   );
 };
 
-const EventsGridSkeleton = () => {
+const EventsGridSkeleton = ({ cardsNum = 3 }: { cardsNum?: number }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {[...Array(9)].map((_, index) => (
+      {[...Array(cardsNum)].map((_, index) => (
         <EventCardSkeleton key={index} />
       ))}
     </div>

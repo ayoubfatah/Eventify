@@ -22,7 +22,7 @@ export default function EventsCard({
   onDelete,
 }: {
   event: Event;
-  actions: boolean;
+  actions?: boolean;
   isInPast: boolean;
   onDelete?: () => void;
 }) {

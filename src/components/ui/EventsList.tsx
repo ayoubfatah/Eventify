@@ -4,7 +4,7 @@ import { Event } from "@/lib/types";
 import { isPast } from "date-fns";
 import CityNotFound from "./cityNotFound";
 
-export default async function EventsList({
+export default function EventsList({
   events,
   actions,
 }: {
@@ -14,7 +14,6 @@ export default async function EventsList({
   // const previousPath = page > 1 ? `/events/${city}?page=${page - 1}` : "";
   // const nextPath =
   //   totalCount > 6 * page ? `/events/${city}?page=${page + 1}` : "";
-
 
   if (!events || events?.length === 0) return <CityNotFound />;
 

@@ -1,5 +1,6 @@
 "use client";
 
+import EventsGridSkeleton from "@/components/ui/eventsCardSekelton";
 import EventsList from "@/components/ui/EventsList";
 import { Event } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -27,7 +28,7 @@ export default function InfiniteEvents() {
 
     queryFn: async ({ pageParam }) => {
       const response = await fetch(
-        `http://localhost:8080/events?page=${pageParam}&limit=10`,
+        `http://localhost:8080/events?page=${pageParam}&limit=4`,
       );
 
       if (!response.ok) {
@@ -49,7 +50,7 @@ export default function InfiniteEvents() {
   });
 
   const events = data?.pages.flatMap((page) => page.events) ?? [];
-
+  console.log(events);
   useEffect(() => {
     const element = loadMoreRef.current;
 
@@ -74,7 +75,7 @@ export default function InfiniteEvents() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isPending) {
-    return <div>Loading events...</div>;
+    return <EventsGridSkeleton />;
   }
 
   if (error) {
@@ -85,9 +86,7 @@ export default function InfiniteEvents() {
     <>
       <EventsList actions={false} events={events as Event[]} />
 
-      {isFetchingNextPage && (
-        <div className="py-10 text-center">Loading more events...</div>
-      )}
+      {isFetchingNextPage && <EventsGridSkeleton />}
 
       {!hasNextPage && <div className="py-10 text-center">No more events.</div>}
 
