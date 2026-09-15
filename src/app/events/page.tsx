@@ -1,4 +1,3 @@
-"use client";
 import H1 from "@/components/ui/h1";
 import { Metadata } from "next";
 import InfiniteEvents from "../reactQuery/InfiniteEvents";
