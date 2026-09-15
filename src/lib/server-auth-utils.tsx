@@ -6,10 +6,10 @@ export type UserData = {
   password: string;
 };
 
-// const API_URL = "http://localhost:8080";
+
 
 export async function signUp(data: UserData) {
-  const response = await fetch("http://localhost:8080/signup", {
+  const response = await fetch(`${process.env.API_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export async function signUp(data: UserData) {
   return result;
 }
 export async function login(data: { email: string; password: string }) {
-  const response = await fetch("http://localhost:8080/login", {
+  const response = await fetch(`${process.env.API_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

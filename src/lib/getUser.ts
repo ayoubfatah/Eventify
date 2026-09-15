@@ -1,10 +1,8 @@
 import { getTokenFromCookies } from "@/lib/cookies";
 
-const API_URL = "http://localhost:8080";
-
 export async function getUserFromToken(token: string) {
   try {
-    const response = await fetch(`${API_URL}/users/me`, {
+    const response = await fetch(`${process.env.API_URL}/users/me`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
       cache: "no-store",
