@@ -24,7 +24,6 @@
     "react-dom": "^18.2.0",
     "server-only": "^0.0.1",
     "sonner": "^2.0.8",
-    "sooner": "^1.1.4",
     "tailwind-merge": "^2.5.4",
     "zod": "^3.22.4"
   },
