@@ -2,11 +2,14 @@ import { getTokenFromCookies } from "@/lib/cookies";
 
 export async function getUserFromToken(token: string) {
   try {
-    const response = await fetch(`${process.env.API_URL}/users/me`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Authorization: token },
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json", Authorization: token },
+        cache: "no-store",
+      },
+    );
 
     const text = await response.text();
 

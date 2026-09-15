@@ -9,7 +9,9 @@ export async function getEvents(): Promise<{
   events: Event[];
   // totalCount: number;
 }> {
-  const response = await fetch(`${process.env.API_URL}/events?page=2&limit=4`);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events?page=2&limit=4`,
+  );
 
   const data = await response.json();
 
@@ -24,7 +26,9 @@ export async function getEventsByCityName(city: string): Promise<{
   events: Event[];
   // totalCount: number;
 }> {
-  const response = await fetch(`${process.env.API_URL}/events/city/${city}`);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events/city/${city}`,
+  );
 
   const data = await response.json();
 
@@ -34,7 +38,9 @@ export async function getEventsByCityName(city: string): Promise<{
 }
 
 export async function getEvent(slug: string): Promise<Event> {
-  const response = await fetch(`${process.env.API_URL}/events/${slug}`);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events/${slug}`,
+  );
 
   if (!response.ok) {
     notFound();
@@ -47,14 +53,17 @@ export async function getEvent(slug: string): Promise<Event> {
 
 export async function updateEvent(data: NonNullEvent) {
   const token = await getTokenFromCookies();
-  const response = await fetch(`${process.env.API_URL}/events/${data.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token!,
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events/${data.id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token!,
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to update event: ${response.status}`);
@@ -67,7 +76,7 @@ export async function reserveEvent(eventId: string) {
   const token = await getTokenFromCookies();
 
   const response = await fetch(
-    `${process.env.API_URL}/registration/${eventId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/registration/${eventId}`,
     {
       method: "PUT",
       headers: {
@@ -84,13 +93,16 @@ export async function getCurrentUserEvents(): Promise<Event[]> {
   const token = await getTokenFromCookies();
 
   try {
-    const response = await fetch(`${process.env.API_URL}/events/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token!,
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/me`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token!,
+        },
       },
-    });
+    );
 
     const data = await response.json();
 
@@ -112,7 +124,7 @@ export async function cancelEvent(eventId: string) {
   const token = await getTokenFromCookies();
 
   const response = await fetch(
-    `${process.env.API_URL}/registration/${eventId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/registration/${eventId}`,
     {
       method: "DELETE",
       headers: {
@@ -130,7 +142,7 @@ export async function cancelEvent(eventId: string) {
 export async function addNewEvent(data: NonNullEvent) {
   const token = await getTokenFromCookies();
 
-  const response = await fetch(`${process.env.API_URL}/events`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -155,13 +167,16 @@ export async function deleteEvent(eventId: number) {
   const token = await getTokenFromCookies();
 
   try {
-    const response = await fetch(`${process.env.API_URL}/events/${eventId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token!,
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token!,
+        },
       },
-    });
+    );
 
     const data = await response.json();
 
@@ -186,7 +201,7 @@ export async function registerForEvent(eventId: number): Promise<string> {
 
   try {
     const response = await fetch(
-      `${process.env.API_URL}/registration/${eventId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/registration/${eventId}`,
 
       {
         method: "POST",
@@ -220,7 +235,7 @@ export async function cancelEventRegistration(
 
   try {
     const response = await fetch(
-      `${process.env.API_URL}/registration/${eventId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/registration/${eventId}`,
       {
         method: "DELETE",
         headers: {
@@ -251,7 +266,7 @@ export async function getEventReservation(eventId: number): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `${process.env.API_URL}/registration/${eventId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/registration/${eventId}`,
       {
         method: "GET",
         headers: {
@@ -282,14 +297,17 @@ export async function getReservedEvents(): Promise<{
 }> {
   const token = await getTokenFromCookies();
 
-  const response = await fetch(`${process.env.API_URL}/events/registration`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token!,
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events/registration`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token!,
+      },
+      cache: "no-store",
     },
-    cache: "no-store",
-  });
+  );
   const data = await response.json();
 
   return {
