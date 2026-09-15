@@ -3,10 +3,10 @@ import Footer from "@/components/ui/footer";
 import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "sonner";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import localFont from "next/font/local";
 import Navbar from "../components/ui/navbar";
 import "./globals.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 

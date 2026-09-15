@@ -1,10 +1,7 @@
 "use client";
 
 import {
-  cancelEventRegistration,
-  getEventReservation,
-  reserveEvent,
-  updateEvent,
+  updateEvent
 } from "@/lib/server-utils";
 
 import { Event } from "@/lib/types";
@@ -13,13 +10,13 @@ import { Clock, Edit, MapPin, Trash } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-import EditEventForm, { NonNullEvent } from "./EditEventForm";
+import { useDeleteEvent } from "@/app/reactQuery/events/useDeleteUserEvent";
 import { useAuth } from "@/context/AuthProvider";
-import EventSkeleton from "./eventSkeleton";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-import { useDeleteEvent } from "@/app/reactQuery/events/useDeleteUserEvent";
-import { useRouter } from "next/navigation";
+import EditEventForm, { NonNullEvent } from "./EditEventForm";
+import EventSkeleton from "./eventSkeleton";
 
 import {
   useCancelEventRegistration,

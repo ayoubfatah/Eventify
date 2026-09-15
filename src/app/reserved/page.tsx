@@ -1,11 +1,8 @@
 import EventsCard from "@/components/ui/eventsCard";
 import H1 from "@/components/ui/h1";
-import { getTokenFromCookies } from "@/lib/cookies";
 import { getReservedEvents } from "@/lib/server-utils";
-import { Event } from "@/lib/types";
 import { isPast } from "date-fns";
 import Link from "next/link";
-import React from "react";
 
 export default async function page() {
   const { events } = await getReservedEvents();
