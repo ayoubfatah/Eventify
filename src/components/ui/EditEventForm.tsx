@@ -39,7 +39,7 @@ export default function EditEventForm({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[99999999] flex items-center justify-center p-4 bg-black/80  backdrop-blur-sm">
       <div className="bg-[#090909] rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 flex items-center justify-between p-6 border-b border-white/10  backdrop-blur-sm">
@@ -158,7 +158,7 @@ export default function EditEventForm({
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-primary text-black font-bold rounded-lg hover:bg-primary/90 transition-all duration-200 active:scale-95"
+              className="flex-1 px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-all duration-200 active:scale-95"
             >
               Save Changes
             </button>

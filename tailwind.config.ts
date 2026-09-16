@@ -18,7 +18,7 @@ export default {
         "2xl": "1536px", // 2X large devices
       },
       colors: {
-        primary: "#fca311",
+        primary: "#7C3AED",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },

@@ -21,6 +21,7 @@ import {
   useEventReservation,
   useRegisterForEvent,
 } from "@/app/reactQuery/events/useEventReservation";
+import { isPast } from "date-fns";
 
 interface EventCardProps {
   data: Event;
@@ -40,7 +41,10 @@ export default function EventCard({ data }: EventCardProps) {
   const registerMutation = useRegisterForEvent(eventData?.id as number);
   const cancelMutation = useCancelEventRegistration(eventData?.id as number);
 
+  const isInPast = isPast(eventData!.date);
+
   const isReserved = reservationQuery.data ?? false;
+
   const isReservationLoading =
     reservationQuery.isLoading ||
     registerMutation.isPending ||
@@ -100,10 +104,13 @@ export default function EventCard({ data }: EventCardProps) {
     <>
       <article
         className={cn(
-          "relative w-full h-screen md:h-[600px]  flex items-center justify-center overflow-hidden",
-          { "border border-primary": isOwner },
+          "relative w-full min-h-screen md:min-h-[600px] flex items-center justify-center overflow-hidden",
+          {
+            "md:border md:border-primary ": isOwner,
+          },
         )}
       >
+        {/* Background */}
         <div className="absolute inset-0 z-0">
           <Image
             className="object-cover w-full h-full blur-md scale-110"
@@ -117,11 +124,12 @@ export default function EventCard({ data }: EventCardProps) {
           <div className="absolute inset-0 bg-black/20" />
         </div>
 
+        {/* Desktop Owner Actions */}
         {isOwner && (
-          <div className="absolute top-6 right-6 z-2000 flex gap-4">
+          <div className="absolute top-6 right-6 z-20 hidden md:flex gap-4">
             <button
               onClick={() => setIsEditOpen(true)}
-              className="p-3 z-9999999 bg-primary hover:bg-primary/90 text-black rounded-lg transition-all duration-200 shadow-lg hover:shadow-primary/50 active:scale-95"
+              className="p-3 bg-primary hover:bg-primary/90 text-white rounded-lg transition-all duration-200 shadow-lg hover:shadow-primary/50 active:scale-95"
               title="Edit event"
             >
               <Edit size={20} />
@@ -129,7 +137,7 @@ export default function EventCard({ data }: EventCardProps) {
 
             <button
               onClick={() => setShowDeleteModel(true)}
-              className="p-3 bg-red-500 z-9999999 text-white rounded-lg transition-all duration-200 shadow-lg hover:shadow-red-500/50 active:scale-95"
+              className="p-3 bg-red-500 text-white rounded-lg transition-all duration-200 shadow-lg hover:shadow-red-500/50 active:scale-95"
               title="Delete event"
             >
               <Trash size={20} />
@@ -137,14 +145,17 @@ export default function EventCard({ data }: EventCardProps) {
           </div>
         )}
 
+        {/* Owned Badge */}
         {isOwner && (
-          <div className="bottom-0 text-black font-semibold px-4 py-1.5 right-0 absolute bg-primary z-9999">
+          <div className="absolute bottom-0 right-0 text-white font-semibold px-4 py-1.5 bg-primary z-20">
             Owned
           </div>
         )}
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:px-12 ">
-          <div className="flex flex-col md:flex-row gap-12 items-start md:items-center">
+        {/* Main Content */}
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:px-12 md:py-0">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-center">
+            {/* Image */}
             <div className="w-full md:w-1/3 flex-shrink-0">
               <div className="relative w-full aspect-square rounded-lg overflow-hidden shadow-2xl ring-1 ring-white/10 hover:ring-primary/50 transition-all duration-300">
                 <Image
@@ -156,9 +167,10 @@ export default function EventCard({ data }: EventCardProps) {
               </div>
             </div>
 
+            {/* Event Information */}
             <section className="w-full md:w-2/3 flex flex-col justify-between">
               <div className="mb-8">
-                <h1 className="text-2xl whitespace-nowrap md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3 tracking-tight">
+                <h1 className="text-2xl whitespace-normal md:whitespace-nowrap md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3 tracking-tight">
                   {eventData?.name}
                 </h1>
 
@@ -175,6 +187,7 @@ export default function EventCard({ data }: EventCardProps) {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10 pb-8 border-b border-white/10">
+                {/* Location */}
                 <div className="flex items-start gap-3">
                   <MapPin
                     className="text-primary mt-1 flex-shrink-0"
@@ -192,6 +205,7 @@ export default function EventCard({ data }: EventCardProps) {
                   </div>
                 </div>
 
+                {/* Date */}
                 <div className="flex items-start gap-3">
                   <Clock
                     className="text-primary mt-1 flex-shrink-0"
@@ -222,7 +236,8 @@ export default function EventCard({ data }: EventCardProps) {
                 </div>
               </div>
 
-              {!isOwner && (
+              {/* Reservation */}
+              {!isOwner && !isInPast && (
                 <button
                   disabled={isReservationLoading}
                   onClick={handleReservation}
@@ -240,11 +255,33 @@ export default function EventCard({ data }: EventCardProps) {
                       : "Reserve a ticket"}
                 </button>
               )}
+
+              {/* Mobile Owner Actions */}
+              {isOwner && (
+                <div className="flex md:hidden gap-3 w-full">
+                  <button
+                    onClick={() => setIsEditOpen(true)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold transition-all duration-200 active:scale-95"
+                  >
+                    <Edit size={18} />
+                    Edit Event
+                  </button>
+
+                  <button
+                    onClick={() => setShowDeleteModel(true)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-all duration-200 active:scale-95"
+                  >
+                    <Trash size={18} />
+                    Delete
+                  </button>
+                </div>
+              )}
             </section>
           </div>
         </div>
       </article>
 
+      {/* Delete Modal */}
       {showDeleteModel && (
         <DeleteConfirmModal
           onConfirm={() => {
@@ -256,6 +293,7 @@ export default function EventCard({ data }: EventCardProps) {
         />
       )}
 
+      {/* Edit Modal */}
       <EditEventForm
         data={eventData as NonNullEvent}
         isOpen={isEditOpen}

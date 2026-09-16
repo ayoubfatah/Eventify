@@ -97,7 +97,7 @@ export default function EventsCard({
   const eventDate = new Date(eventData!.date);
 
   return (
-    <div className="relative">
+    <div className="relative ">
       {/* Event Card */}
       <MotionLink
         ref={ref}
@@ -108,7 +108,7 @@ export default function EventsCard({
       >
         <article
           className={cn(
-            "relative h-[350px] w-full bg-[#232323] flex flex-col rounded-md overflow-hidden transition-scale active:scale-[1.02] duration-300 cursor-pointer",
+            "relative h-[350px] w-full  bg-[#232323] flex flex-col rounded-md overflow-hidden transition-scale active:scale-[1.02] duration-300 cursor-pointer",
             {
               "hover:scale-105": !actions,
               "border border-primary": owned && !actions,
@@ -146,7 +146,7 @@ export default function EventsCard({
           {/* Owned Badge */}
           {owned && !actions && (
             <div className="absolute bottom-0 right-0 z-50 overflow-hidden rounded-tl-lg">
-              <span className="flex items-center gap-1 bg-primary px-4 py-1.5 text-sm font-bold text-black">
+              <span className="flex items-center gap-1 bg-primary px-4 py-1.5 text-sm font-bold text-white">
                 Owned
               </span>
             </div>
@@ -169,8 +169,8 @@ export default function EventsCard({
             )}
 
             {eventStatus === "tomorrow" && (
-              <span className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-black/80 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              <span className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-black/80 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-white" />
                 Tomorrow
               </span>
             )}

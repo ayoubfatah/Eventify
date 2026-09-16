@@ -1,4 +1,5 @@
 import EventsCard from "@/components/ui/eventsCard";
+import EventsGridSkeleton from "@/components/ui/eventsCardSekelton";
 import H1 from "@/components/ui/h1";
 import { getReservedEvents } from "@/lib/server-utils";
 import { isPast } from "date-fns";

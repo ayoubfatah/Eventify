@@ -26,7 +26,7 @@ export default function Page() {
   }
 
   return (
-    <div className="mt-12">
+    <div className="px-8 sm:px-6 md:px-0 mt-12">
       {" "}
       <H1 className="mb-8">Login to Eventify</H1>{" "}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
-    // i know this is not safe but  this is just for learning purposes  
-    // its dangerous cause someone can just add a rndm token in cookies  
+  // i know this is not safe but  this is just for learning purposes
+  // its dangerous cause someone can just add a rndm token in cookies
   const token = request.cookies.get("token")?.value;
 
   const protectedRoutes = ["/my-events", "/events/add"];
@@ -24,5 +24,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/my-events/:path*", "/add-event/:path*"],
+  matcher: ["/my-events/:path*", "/add-event/:path*", "/reserved:path*"],
 };

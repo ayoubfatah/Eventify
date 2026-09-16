@@ -78,7 +78,7 @@ export default function AddEventPage() {
   };
 
   return (
-    <main className="min-h-screen  py-12">
+    <main className="px-4 sm:px-6 md:px-0 min-h-screen  py-12">
       <div className="mx-auto w-full ">
         {/* Header */}
         <div className="mb-8">
@@ -240,7 +240,7 @@ export default function AddEventPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6  select-end block  ml-auto !w-[30%] py-3 bg-primary text-black font-bold rounded-lg hover:bg-primary/90 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className=" sm:px-6   select-end block  ml-auto !w-[30%] py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Creating..." : "Create Event"}
             </button>

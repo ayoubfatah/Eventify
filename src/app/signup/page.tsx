@@ -68,7 +68,7 @@ export default function Page() {
 
   if (isSuccess) {
     return (
-      <div className="mt-12 text-center">
+      <div className="px-8 sm:px-6 md:px-0 mt-12 text-center">
         <H1 className="mb-4">Sign Up Completed 🎉</H1>
 
         <p className="text-white/70 mb-6">
@@ -86,7 +86,7 @@ export default function Page() {
   }
 
   return (
-    <div className="mt-12">
+    <div className="px-8 sm:px-6 md:px-0 mt-12">
       <H1 className="mb-8">Sign Up to Eventify</H1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

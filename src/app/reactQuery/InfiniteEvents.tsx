@@ -28,7 +28,7 @@ export default function InfiniteEvents() {
 
     queryFn: async ({ pageParam }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/events?page=${pageParam}&limit=4`,
+        `${process.env.NEXT_PUBLIC_API_URL}/events?page=${pageParam}&limit=6`,
       );
 
       if (!response.ok) {

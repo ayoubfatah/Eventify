@@ -12,12 +12,13 @@ import { useRef, useState } from "react";
 type Routes = {
   name: string;
   path: string;
+  locked: boolean;
 };
 
 const routes: Routes[] = [
-  { name: "Home", path: "/" },
-  { name: "All Events", path: "/events" },
-  { name: "Reserved", path: "/reserved" },
+  { name: "Home", path: "/", locked: false },
+  { name: "All Events", path: "/events", locked: false },
+  { name: "Reserved", path: "/reserved", locked: true },
 ];
 
 export default function Navbar() {
@@ -38,8 +39,14 @@ export default function Navbar() {
     setIsOpen((prev) => !prev);
   };
 
+  const closeMobileMenu = () => {
+    setIsOpen(false);
+  };
+
+  const visibleRoutes = routes.filter((route) => !route.locked || isLoggedIn);
+
   return (
-    <header className=" flex justify-between py-5 items-center font-semibold container mx-auto">
+    <header className="px-6 sm:px-0 flex justify-between py-5 items-center font-semibold container mx-auto">
       {/* Logo */}
       <span>
         <Link href="/" className="text-primary font-bold text-2xl">
@@ -47,13 +54,13 @@ export default function Navbar() {
         </Link>
       </span>
 
-      {/* Big Screen Navigation */}
+      {/* Desktop Navigation */}
       <nav className="-translate-y-[200px] sm:translate-y-0 sm:flex">
         <ul className="flex justify-between gap-4 items-center">
-          {routes.map((route) => (
+          {visibleRoutes.map((route) => (
             <li key={route.name} className="relative">
               <Link
-                prefetch={true}
+                prefetch
                 className={cn("hover:text-white transition relative", {
                   "text-white": activePathname === route.path,
                   "text-white/60": activePathname !== route.path,
@@ -74,12 +81,11 @@ export default function Navbar() {
         </ul>
       </nav>
 
-      {/* Auth Buttons / User Menu */}
+      {/* Desktop Auth */}
       {isLoading ? (
-        <div className="flex items-center gap-2 px-3 py-2">
-          {" "}
-          <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />{" "}
-          <div className="w-20 h-4 rounded-md bg-white/10 animate-pulse" />{" "}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-2">
+          <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />
+          <div className="w-20 h-4 rounded-md bg-white/10 animate-pulse" />
         </div>
       ) : (
         <div className="hidden sm:flex items-center gap-3">
@@ -94,14 +100,13 @@ export default function Navbar() {
 
               <Link
                 href="/signup"
-                className="px-5 py-2 rounded-full hover:text-pri bg-primary text-white hover:opacity-90 transition"
+                className="px-5 py-2 rounded-full bg-primary text-white hover:opacity-90 transition"
               >
                 Sign Up
               </Link>
             </>
           ) : (
             <div className="relative">
-              {/* User button */}
               <button
                 onClick={() => setUserMenuOpen((prev) => !prev)}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition"
@@ -120,7 +125,6 @@ export default function Navbar() {
                 />
               </button>
 
-              {/* Dropdown */}
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
@@ -129,20 +133,21 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute  z-[9999999] bg-black right-0 mt-2 w-48 rounded-xl  border  border-primary shadow-xl  "
+                    className="absolute z-[9999999] bg-black right-0 mt-2 w-48 rounded-xl border border-primary shadow-xl"
                   >
-                    <div className="px-4 py-3 border-b border-black/10">
-                      <p className="font-semibold text-gray-50 ">
-                        {user.firstName} {user.secondName}{" "}
+                    <div className="px-4 py-3 border-b border-white/10">
+                      <p className="font-semibold text-gray-50">
+                        {user.firstName} {user.secondName}
                       </p>
-                      <p className="text-sm text-gray-50 /50">{user.email}</p>
+
+                      <p className="text-sm text-gray-50/50">{user.email}</p>
                     </div>
 
                     <div className="p-1">
                       <Link
                         href="/add-event"
                         onClick={() => setUserMenuOpen(false)}
-                        className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
+                        className="block px-3 py-2 rounded-lg text-gray-50 hover:bg-white/5 transition"
                       >
                         Add event
                       </Link>
@@ -150,7 +155,7 @@ export default function Navbar() {
                       <Link
                         href="/my-events"
                         onClick={() => setUserMenuOpen(false)}
-                        className="block px-3 py-2 rounded-lg text-gray-50 cursor-pointer  hover:bg-white/5 transition"
+                        className="block px-3 py-2 rounded-lg text-gray-50 hover:bg-white/5 transition"
                       >
                         My Events
                       </Link>
@@ -160,7 +165,7 @@ export default function Navbar() {
                           logOut();
                           setUserMenuOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 rounded-lg cursor-pointer  text-red-500 hover:!bg-red-500/10 transition"
+                        className="w-full text-left px-3 py-2 rounded-lg text-red-500 hover:!bg-red-500/10 transition"
                       >
                         Logout
                       </button>
@@ -175,40 +180,40 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       <div className="relative block sm:hidden">
-        {/* Menu Trigger */}
+        {/* Mobile Menu Button */}
         <motion.button
+          type="button"
           aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="fixed top-2 right-2 z-50 w-10 h-10 bg-white rounded-full flex items-center justify-center"
+          aria-expanded={isOpen}
+          className="fixed top-4 right-4 z-[1000001] w-10 h-10 bg-white rounded-full flex items-center justify-center"
           onClick={toggleMenu}
-          whileTap={{ scale: 1.1 }}
+          whileTap={{ scale: 0.8 }}
           animate={isOpen ? "opened" : "closed"}
         >
           <motion.div
-            className={`absolute h-full w-full inset-0 ${
-              isOpen ? "scale-[50]" : "scale-0"
-            } bg-white z-[500] rounded-full transition-transform duration-700 ease-in-out`}
-          />
-
-          <motion.div
             variants={{
-              closed: { rotate: 0 },
-              opened: { rotate: 180 },
+              closed: {
+                rotate: 0,
+              },
+              opened: {
+                rotate: 180,
+              },
             }}
             transition={{ duration: 0.3 }}
-            className="flex items-center z-[1000] justify-center"
+            className="flex items-center justify-center"
           >
             <motion.div
               variants={{
-                closed: { rotate: 0 },
-                opened: { rotate: 45 },
+                closed: {
+                  rotate: 0,
+                },
+                opened: {
+                  rotate: 45,
+                },
               }}
               transition={{ duration: 0.3 }}
             >
-              <Plus
-                size={35}
-                strokeWidth={2}
-                className="transition-colors text-black"
-              />
+              <Plus size={30} strokeWidth={2} className="text-black" />
             </motion.div>
           </motion.div>
         </motion.button>
@@ -220,91 +225,190 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-[999999] flex items-center justify-center"
+              className="fixed inset-0 z-[1000000] bg-white"
             >
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                exit={{
+                  transition: {
+                    duration: 0.1,
+                  },
+                  opacity: 0,
+                  scale: 0.8,
+                }}
                 transition={{
                   duration: 0.5,
                   ease: "easeOut",
                 }}
-                className="text-center space-y-4"
+                className="h-full w-full flex items-center justify-center"
               >
-                {routes.map((link, index) => (
-                  <motion.div
-                    key={link.path}
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        delay: 0.3 + index * 0.15,
-                        duration: 0.5,
-                        ease: "easeOut",
-                      },
-                    }}
-                  >
-                    <Link
-                      href={link.path}
-                      onClick={() => setIsOpen(false)}
-                      className="block text-3xl font-bold text-black transition-colors"
+                <div className="text-left space-y-6">
+                  {/* Mobile Routes */}
+                  {visibleRoutes.map((link, index) => (
+                    <motion.div
+                      key={link.path}
+                      initial={{
+                        opacity: 0,
+                        y: 50,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          delay: 0.1 + index * 0.15,
+                          duration: 0.2,
+                          ease: "easeOut",
+                        },
+                      }}
                     >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
-
-                {/* Mobile Auth */}
-                <div className="pt-6 flex flex-col gap-3">
-                  {!isLoggedIn ? (
-                    <>
                       <Link
-                        href="/login"
-                        onClick={() => setIsOpen(false)}
-                        className="text-xl font-semibold text-black"
+                        href={link.path}
+                        onClick={closeMobileMenu}
+                        className="block text-3xl font-bold text-black transition-colors"
                       >
-                        Login
+                        {link.name}
                       </Link>
+                    </motion.div>
+                  ))}
 
-                      <Link
-                        href="/signup"
-                        onClick={() => setIsOpen(false)}
-                        className="px-6 py-3 rounded-full bg-primary text-white"
-                      >
-                        Sign Up
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href="/add-event"
-                        onClick={() => setIsOpen(false)}
-                        className="text-xl font-semibold text-black"
-                      >
-                        Add Event
-                      </Link>
+                  {/* Mobile Auth */}
+                  <div className="flex flex-col text-left text-3xl space-y-6 font-bold">
+                    {!isLoggedIn ? (
+                      <>
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 50,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.1 + visibleRoutes.length * 0.15,
+                            duration: 0.3,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Link
+                            href="/login"
+                            onClick={closeMobileMenu}
+                            className="font-semibold  text-primary"
+                          >
+                            Login
+                          </Link>
+                        </motion.div>
 
-                      <Link
-                        href="/my-events"
-                        onClick={() => setIsOpen(false)}
-                        className="text-xl font-semibold text-black"
-                      >
-                        My Events
-                      </Link>
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 50,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.1 + (visibleRoutes.length + 1) * 0.15,
+                            duration: 0.3,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Link
+                            href="/signup"
+                            onClick={closeMobileMenu}
+                            className=" rounded-full text-primary"
+                          >
+                            Sign Up
+                          </Link>
+                        </motion.div>
+                      </>
+                    ) : (
+                      <>
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 50,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.1 + visibleRoutes.length * 0.15,
+                            duration: 0.3,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Link
+                            href="/add-event"
+                            onClick={closeMobileMenu}
+                            className="font-semibold text-black"
+                          >
+                            Add Event
+                          </Link>
+                        </motion.div>
 
-                      <button
-                        onClick={() => {
-                          // TODO: logout
-                          setIsOpen(false);
-                        }}
-                        className="text-xl font-semibold text-red-500"
-                      >
-                        Logout
-                      </button>
-                    </>
-                  )}
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 50,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.3 + (visibleRoutes.length + 1) * 0.15,
+                            duration: 0.5,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Link
+                            href="/my-events"
+                            onClick={closeMobileMenu}
+                            className="font-semibold text-black"
+                          >
+                            My Events
+                          </Link>
+                        </motion.div>
+
+                        <motion.div
+                          initial={{
+                            opacity: 0,
+                            y: 50,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.3 + (visibleRoutes.length + 2) * 0.15,
+                            duration: 0.5,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              logOut();
+                              closeMobileMenu();
+                            }}
+                            className="text-left font-semibold text-red-500"
+                          >
+                            Logout
+                          </button>
+                        </motion.div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
