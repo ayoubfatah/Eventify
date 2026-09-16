@@ -9,35 +9,30 @@ const formFields = [
     label: "First name",
     name: "firstName",
     placeHolder: "John",
-    defaultValue: "Said",
     type: "text",
   },
   {
     label: "Second name",
     name: "secondName",
     placeHolder: "Doe",
-    defaultValue: "Fatah",
     type: "text",
   },
   {
     label: "Username",
     name: "userName",
     placeHolder: "ssaid123",
-    defaultValue: "ssaid123",
     type: "text",
   },
   {
     label: "Email",
     name: "email",
     placeHolder: "sss@gmail.com",
-    defaultValue: "sss@gmail.com",
     type: "email",
   },
   {
     label: "Password",
     name: "password",
     placeHolder: "********",
-    defaultValue: "12345678",
     type: "password",
   },
 ];
@@ -103,7 +98,6 @@ export default function Page() {
               id={field.name}
               type={field.type}
               name={field.name}
-              defaultValue={field.defaultValue}
               placeholder={field.placeHolder}
               required
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
