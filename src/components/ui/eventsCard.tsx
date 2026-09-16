@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/context/AuthProvider";
 import { updateEvent } from "@/lib/server-utils";
 import { Event } from "@/lib/types";
 import { cn } from "@/utils/helpers";
@@ -8,17 +9,46 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import EditEventForm, { NonNullEvent } from "./EditEventForm";
+
 import DeleteConfirmModal from "./DeleteConfirmModal";
-import { useAuth } from "@/context/AuthProvider";
+import EditEventForm, { NonNullEvent } from "./EditEventForm";
 
 const MotionLink = motion(Link);
+
+type EventStatus = "ended" | "today" | "tomorrow" | "upcoming";
+
+const getEventStatus = (date: string | Date): EventStatus => {
+  const eventDate = new Date(date);
+  const now = new Date();
+
+  if (eventDate <= now) {
+    return "ended";
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const eventDay = new Date(eventDate);
+  eventDay.setHours(0, 0, 0, 0);
+
+  if (eventDay.getTime() === today.getTime()) {
+    return "today";
+  }
+
+  if (eventDay.getTime() === tomorrow.getTime()) {
+    return "tomorrow";
+  }
+
+  return "upcoming";
+};
 
 export default function EventsCard({
   event,
   actions = false,
   isInPast,
-
   onDelete,
 }: {
   event: Event;
@@ -29,20 +59,22 @@ export default function EventsCard({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [showDeleteModel, setShowDeleteModel] = useState(false);
   const [eventData, setEventData] = useState(event);
+
   const { user } = useAuth();
+
   const owned = user?.id === event?.userId;
 
-  // const previousPath = page > 1 ? `/events/${city}?page=${page - 1}` : "";
-  // const nextPath =
-  //   totalCount > 6 * page ? `/events/${city}?page=${page + 1}` : "";
+  const eventStatus = getEventStatus(eventData!.date);
 
   const handleSaveEdit = async (updatedData: NonNullEvent) => {
     try {
       const result = await updateEvent(updatedData);
 
       setEventData(result.event);
+
       if (result) {
         toast.success("Event edited successfully!");
+
         setTimeout(() => {
           setIsEditOpen(false);
         }, 0);
@@ -60,8 +92,9 @@ export default function EventsCard({
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-
   const opacity = useTransform(scrollYProgress, [0, 1], [0.3, 1]);
+
+  const eventDate = new Date(eventData!.date);
 
   return (
     <div className="relative">
@@ -71,14 +104,14 @@ export default function EventsCard({
         initial={{ opacity: 0, scale: 0.8 }}
         href={`/event/${eventData?.slug}`}
         style={{ scale, opacity }}
-        className={cn("relative w-full flex ")}
+        className="relative w-full flex"
       >
         <article
           className={cn(
-            "relative h-[350px] w-full bg-[#232323] flex flex-col rounded-md overflow-hidden  transition-scale active:scale-[1.02] duration-300 cursor-pointer",
+            "relative h-[350px] w-full bg-[#232323] flex flex-col rounded-md overflow-hidden transition-scale active:scale-[1.02] duration-300 cursor-pointer",
             {
               "hover:scale-105": !actions,
-              " border border-primary": owned && !actions,
+              "border border-primary": owned && !actions,
             },
           )}
         >
@@ -95,14 +128,13 @@ export default function EventsCard({
               src={eventData?.imageUrl || ""}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+              quality={10}
             />
           </div>
 
           {/* Event Information */}
           <section className="h-1/2 flex items-center flex-col pt-10">
-            <h2 className="text-white">{isInPast ? "true" : "false"}</h2>
-
-            <h2 className="text-2xl lg:text-3xl font-semibold">
+            <h2 className="text-2xl lg:text-2xl font-semibold">
               {eventData?.name}
             </h2>
 
@@ -111,29 +143,50 @@ export default function EventsCard({
             <span className="text-white/50">{eventData?.location}</span>
           </section>
 
-          {/* Ended Badge */}
+          {/* Owned Badge */}
           {owned && !actions && (
-            <div className="absolute bg-primary bottom-0 right-0 text-center z-50 flex flex-col items-center ">
-              <span className="font-bold py-1 px-3 text-black">Owned</span>
-            </div>
-          )}
-          {isInPast && (
-            <div className="absolute bg-black/70 right-[12px] top-[12px] text-center z-50 flex flex-col items-center rounded-md">
-              <span className="font-bold py-1 px-3 text-primary">Ended</span>
+            <div className="absolute bottom-0 right-0 z-50 overflow-hidden rounded-tl-lg">
+              <span className="flex items-center gap-1 bg-primary px-4 py-1.5 text-sm font-bold text-black">
+                Owned
+              </span>
             </div>
           )}
 
+          {/* Event Status Badge */}
+          <div className="absolute right-3 top-3 z-50">
+            {eventStatus === "ended" && (
+              <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/80 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white/60 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+                Ended
+              </span>
+            )}
+
+            {eventStatus === "today" && (
+              <span className="flex items-center gap-1.5 rounded-full border border-red-500/30 bg-black/80 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-red-400 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" />
+                Today
+              </span>
+            )}
+
+            {eventStatus === "tomorrow" && (
+              <span className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-black/80 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                Tomorrow
+              </span>
+            )}
+          </div>
+
           {/* Date Badge */}
-          {!isInPast && (
-            <section className="absolute bg-black/70 left-[12px] top-[12px] h-[45px] w-[45px] text-center flex flex-col items-center rounded-md">
-              <span className="font-bold text-xl -mb-[5px]">
-                {new Date(event!.date).toLocaleString("en-US", {
+          {eventStatus !== "ended" && (
+            <section className="absolute left-3 top-3 z-50 flex h-[52px] w-[52px] flex-col items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/80 backdrop-blur-sm">
+              <span className="text-xl font-bold leading-none text-white">
+                {eventDate.toLocaleString("en-US", {
                   day: "2-digit",
                 })}
               </span>
 
-              <span className="text-xs uppercase text-primary">
-                {new Date(event!.date)
+              <span className="mt-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                {eventDate
                   .toLocaleString("en-US", {
                     month: "short",
                   })
@@ -146,35 +199,35 @@ export default function EventsCard({
 
       {/* Actions */}
       {actions && (
-        <div className=" right-3 bottom-3  flex  ">
-          {/* Edit */}
+        <div className="flex">
           <button
             type="button"
             onClick={() => {
               setIsEditOpen(true);
             }}
-            className="bg-primary  w-full block px-3 py-2 text-sm text-white hover:bg-primary/90 "
+            className="block w-full bg-primary px-3 py-2 text-sm text-white hover:bg-primary/90"
           >
             Edit
           </button>
 
-          {/* Delete */}
-
           <button
             type="button"
             onClick={() => setShowDeleteModel(true)}
-            className="bg-red-500/80  w-full block px-3 py-2 text-sm text-white hover:bg-red-500 "
+            className="block w-full bg-red-500/80 px-3 py-2 text-sm text-white hover:bg-red-500"
           >
             Delete
           </button>
         </div>
       )}
+
+      {/* Delete Modal */}
       {showDeleteModel && (
         <DeleteConfirmModal
           onConfirm={onDelete!}
           onCancel={() => setShowDeleteModel(false)}
         />
       )}
+
       {/* Edit Modal */}
       <EditEventForm
         isOpen={isEditOpen}

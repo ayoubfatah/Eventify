@@ -88,8 +88,6 @@ export default function InfiniteEvents() {
 
       {isFetchingNextPage && <EventsGridSkeleton />}
 
-      {!hasNextPage && <div className="py-10 text-center">No more events.</div>}
-
       <div ref={loadMoreRef} className="h-1 opacity-0" aria-hidden="true" />
     </>
   );

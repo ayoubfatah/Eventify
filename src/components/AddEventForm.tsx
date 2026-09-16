@@ -59,7 +59,7 @@ export default function AddEventPage() {
     try {
       queryClient.invalidateQueries({ queryKey: eventQueryKeys.currentUser() });
 
-      const createdEvent = await addNewEvent(formData);
+      const createdEvent = await addNewEvent(formData as any);
       console.log("Created event:", createdEvent);
       toast.success("New Event Added successfully");
       router.push("/my-events");

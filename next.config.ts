@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    qualities: [10, 75],
     remotePatterns: [
       {
         protocol: "https",
@@ -14,6 +15,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "plus.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "unsplash.com",
       },
     ],
   },

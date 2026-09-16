@@ -18,7 +18,6 @@ export default function EditEventForm({
   onClose,
   onSave,
 }: EditEventFormProps) {
-
   const [formData, setFormData] = useState<NonNullEvent>(data);
 
   const handleChange = (
@@ -41,9 +40,9 @@ export default function EditEventForm({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-black rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl">
+      <div className="bg-[#090909] rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between p-6 border-b border-white/10 bg-black/40 backdrop-blur-sm">
+        <div className="sticky top-0 flex items-center justify-between p-6 border-b border-white/10  backdrop-blur-sm">
           <h2 className="text-2xl md:text-3xl font-bold text-white">
             Edit Event
           </h2>

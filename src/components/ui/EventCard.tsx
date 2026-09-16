@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  updateEvent
-} from "@/lib/server-utils";
+import { updateEvent } from "@/lib/server-utils";
 
 import { Event } from "@/lib/types";
 import { cn } from "@/utils/helpers";
@@ -68,7 +66,11 @@ export default function EventCard({ data }: EventCardProps) {
     if (isReserved) {
       cancelMutation.mutate(undefined, {
         onSuccess: () => {
-          toast.success("Reservation cancelled");
+          if (!user) {
+            toast.success("You need to be logged in to reserver this event");
+          } else {
+            toast.success("Reservation cancelled");
+          }
         },
         onError: (error) => {
           toast.error(error.message);
@@ -141,7 +143,7 @@ export default function EventCard({ data }: EventCardProps) {
           </div>
         )}
 
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:px-12 py-12">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:px-12 ">
           <div className="flex flex-col md:flex-row gap-12 items-start md:items-center">
             <div className="w-full md:w-1/3 flex-shrink-0">
               <div className="relative w-full aspect-square rounded-lg overflow-hidden shadow-2xl ring-1 ring-white/10 hover:ring-primary/50 transition-all duration-300">
@@ -156,7 +158,7 @@ export default function EventCard({ data }: EventCardProps) {
 
             <section className="w-full md:w-2/3 flex flex-col justify-between">
               <div className="mb-8">
-                <h1 className="text-4xl whitespace-nowrap md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3 tracking-tight">
+                <h1 className="text-2xl whitespace-nowrap md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3 tracking-tight">
                   {eventData?.name}
                 </h1>
 
