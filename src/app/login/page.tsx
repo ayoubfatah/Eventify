@@ -73,7 +73,7 @@ export default function Page() {
         <button
           type="submit"
           disabled={isLoading}
-          className="ml-auto mt-8 px-6 py-3 bg-primary rounded-lg text-black font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="ml-auto mt-8 px-6 py-3 bg-primary rounded-lg text-white font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {" "}
           {isLoading ? "Login..." : "Login"}{" "}

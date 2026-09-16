@@ -237,7 +237,7 @@ export default function EventCard({ data }: EventCardProps) {
               </div>
 
               {/* Reservation */}
-              {!isOwner && !isInPast && (
+              {user && !isOwner && !isInPast && (
                 <button
                   disabled={isReservationLoading}
                   onClick={handleReservation}
@@ -245,7 +245,7 @@ export default function EventCard({ data }: EventCardProps) {
                     "w-full sm:w-auto px-8 md:px-10 py-4 font-bold text-base md:text-lg rounded-lg transition-all duration-200 ease-linear active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed",
                     isReserved
                       ? "bg-transparent border border-primary text-white hover:bg-primary/10"
-                      : "bg-primary border border-transparent text-black hover:bg-primary/90",
+                      : "bg-primary border border-transparent text-white hover:bg-primary/90",
                   )}
                 >
                   {isReservationLoading
