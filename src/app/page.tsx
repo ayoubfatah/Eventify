@@ -18,7 +18,7 @@ export default async function Home() {
       <section className="text-[13px] xs:text-sm mt-4 flex gap-x-4 text-slate-500/80">
         <p>Popular:</p>
         <div className="space-x-2 text-slate-500">
-          <Link href={"/events/marrakesh"}>Marrakesh</Link>
+          <Link href={"/events/marrakesh"}>Austin</Link>
           <Link href={"/events/Casablanca"}>Casablanca</Link>
         </div>
       </section>
