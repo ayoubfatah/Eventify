@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { useQueryClient } from "@tanstack/react-query";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import EditEventForm, { NonNullEvent } from "./EditEventForm";
 
@@ -65,6 +66,7 @@ export default function EventsCard({
   const owned = user?.id === event?.userId;
 
   const eventStatus = getEventStatus(eventData!.date);
+  const queryClient = useQueryClient();
 
   const handleSaveEdit = async (updatedData: NonNullEvent) => {
     try {
@@ -74,6 +76,7 @@ export default function EventsCard({
 
       if (result) {
         toast.success("Event edited successfully!");
+        queryClient.invalidateQueries({ queryKey: ["events"] });
 
         setTimeout(() => {
           setIsEditOpen(false);

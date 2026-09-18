@@ -22,6 +22,7 @@ import {
   useRegisterForEvent,
 } from "@/app/reactQuery/events/useEventReservation";
 import { isPast } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EventCardProps {
   data: Event;
@@ -40,6 +41,7 @@ export default function EventCard({ data }: EventCardProps) {
   const reservationQuery = useEventReservation(eventData?.id as number);
   const registerMutation = useRegisterForEvent(eventData?.id as number);
   const cancelMutation = useCancelEventRegistration(eventData?.id as number);
+  const queryClient = useQueryClient();
 
   const isInPast = isPast(eventData!.date);
 
@@ -55,6 +57,7 @@ export default function EventCard({ data }: EventCardProps) {
       const result = await updateEvent(updatedData);
 
       toast.success("Event edited successfully!");
+      queryClient.invalidateQueries({ queryKey: ["events"] });
 
       setEventData(result.event);
 
