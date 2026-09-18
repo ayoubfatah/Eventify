@@ -105,6 +105,7 @@ export async function updateEvent(data: NonNullEvent) {
   }
 
   revalidatePath("/my-events");
+  revalidatePath("/events");
 
   return updatedEvent;
 }
