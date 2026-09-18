@@ -1,6 +1,6 @@
 "use server";
 import { notFound } from "next/navigation";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import type { Event } from "./types";
 import { NonNullEvent } from "@/components/ui/EditEventForm";
@@ -101,9 +101,10 @@ export async function updateEvent(data: NonNullEvent) {
 
   if (data.slug) {
     revalidateTag(`event:${data.slug}`, "max");
+    revalidatePath(`/events/${data.slug}`);
   }
 
-  revalidateTag("user-events", "max");
+  revalidatePath("/my-events");
 
   return updatedEvent;
 }
@@ -133,8 +134,13 @@ export async function addNewEvent(data: NonNullEvent) {
 
   const createdEvent = await response.json();
 
+  if (createdEvent.slug) {
+    revalidateTag(`event:${createdEvent.slug}`, "max");
+    revalidatePath(`/events/${createdEvent.slug}`);
+  }
+
   revalidateTag("events", "max");
-  revalidateTag("user-events", "max");
+  revalidatePath("/my-events");
 
   return createdEvent;
 }
@@ -159,8 +165,13 @@ export async function deleteEvent(eventId: number) {
       throw new Error(data.message || "Couldn't delete the event");
     }
 
+    if (data.slug) {
+      revalidateTag(`event:${data.slug}`, "max");
+      revalidatePath(`/events/${data.slug}`);
+    }
+
     revalidateTag("events", "max");
-    revalidateTag("user-events", "max");
+    revalidatePath("/my-events");
 
     return data.events;
   } catch (error) {
@@ -224,6 +235,8 @@ export async function reserveEvent(eventId: string) {
 
   revalidateTag("registrations", "max");
   revalidateTag("events", "max");
+  revalidatePath("/events");
+  revalidatePath("/event");
 
   return response.json();
 }
@@ -250,6 +263,8 @@ export async function registerForEvent(eventId: number): Promise<string> {
 
     revalidateTag("registrations", "max");
     revalidateTag("events", "max");
+    revalidatePath("/events");
+    revalidatePath("/event");
 
     return data.message;
   } catch (error) {
@@ -285,6 +300,8 @@ export async function cancelEventRegistration(
 
     revalidateTag("registrations", "max");
     revalidateTag("events", "max");
+    revalidatePath("/events");
+    revalidatePath("/event");
 
     return data.message;
   } catch (error) {

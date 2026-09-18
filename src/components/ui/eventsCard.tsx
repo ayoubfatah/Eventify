@@ -92,26 +92,30 @@ export default function EventsCard({
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.3, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
 
   const eventDate = new Date(eventData!.date);
 
   return (
-    <div className="relative ">
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.8 }}
+      style={{ scale, opacity }}
+      className="relative "
+    >
       {/* Event Card */}
       <MotionLink
-        ref={ref}
-        initial={{ opacity: 0, scale: 0.8 }}
         href={`/event/${eventData?.slug}`}
-        style={{ scale, opacity }}
         className="relative w-full flex"
       >
         <article
           className={cn(
-            "relative h-[350px] w-full  bg-[#232323] flex flex-col rounded-md overflow-hidden transition-scale active:scale-[1.02] duration-300 cursor-pointer",
+            "relative h-[350px] w-full  bg-[#232323] flex flex-col overflow-hidden transition-scale active:scale-[1.02] duration-300 cursor-pointer",
             {
-              "hover:scale-105": !actions,
-              "border border-primary": owned && !actions,
+              "hover:scale-105 rounded-md ": !actions,
+              "border border-primary rounded-md ": owned && !actions,
+              "rounded-t-md rounded-r-md rounded-l-md rounded-b-none  ":
+                actions,
             },
           )}
         >
@@ -199,7 +203,7 @@ export default function EventsCard({
 
       {/* Actions */}
       {actions && (
-        <div className="flex">
+        <motion.div style={{ scale, opacity }} className="flex">
           <button
             type="button"
             onClick={() => {
@@ -217,7 +221,7 @@ export default function EventsCard({
           >
             Delete
           </button>
-        </div>
+        </motion.div>
       )}
 
       {/* Delete Modal */}
@@ -235,6 +239,6 @@ export default function EventsCard({
         onClose={() => setIsEditOpen(false)}
         onSave={handleSaveEdit}
       />
-    </div>
+    </motion.div>
   );
 }
