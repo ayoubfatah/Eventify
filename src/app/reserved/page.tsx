@@ -1,13 +1,26 @@
+"use client";
+
 import EventsCard from "@/components/ui/eventsCard";
 import H1 from "@/components/ui/h1";
-import { getReservedEvents } from "@/lib/server-utils";
+
 import { isPast } from "date-fns";
 import Link from "next/link";
+import { useReservedEvents } from "../reactQuery/events/useEventReservation";
 
-export default async function page() {
-  const { events } = await getReservedEvents();
+export default function ReservedPage() {
+  const { data, isLoading, isError } = useReservedEvents();
 
-  if (!events || events?.length === 0) {
+  if (isLoading) {
+    return <div>Loading your events...</div>;
+  }
+
+  if (isError) {
+    return <div>Failed to load your events.</div>;
+  }
+
+  const events = data?.events;
+
+  if (!events || events.length === 0) {
     return (
       <section>
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16 xl:mt-20">
@@ -31,15 +44,17 @@ export default async function page() {
       </section>
     );
   }
-  return (
-    <main className="container mx-auto px-4 py-5 flex flex-col border-white/30 mb-9">
-      <H1 className="text-center py-10">Your Registered Events</H1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10 mb-10">
-        {events?.map((event) => {
+  return (
+    <main className="container mx-auto mb-9 flex flex-col border-white/30 px-4 py-5">
+      <H1 className="py-10 text-center">Your Registered Events</H1>
+
+      <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+        {events.map((event) => {
           const isInPast = isPast(event!.date);
+
           return (
-            <EventsCard isInPast={isInPast} key={event?.id} event={event} />
+            <EventsCard key={event?.id} event={event} isInPast={isInPast} />
           );
         })}
       </div>
