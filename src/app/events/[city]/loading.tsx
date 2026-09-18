@@ -28,7 +28,8 @@ export default async function Loading({
 }: {
   params: Promise<{ city: string }>;
 }) {
-  const { city } = await params;
+  const param = await params;
+  const city = (await param)?.city;
   return (
     <main className="container mx-auto px-4 py-5 flex flex-col  border-white/30 mb-9">
       <H1 className="text-center py-10 ">All events in {city} </H1>
