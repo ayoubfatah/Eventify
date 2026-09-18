@@ -7,7 +7,8 @@ export default async function Page({
 }: {
   params: Promise<{ city: string }>;
 }) {
-  const city = (await params).city;
+  const param = await params;
+  const city = (await param)?.city;
 
   const { events } = await getEventsByCityName(city);
   console.log(city);
