@@ -14,9 +14,9 @@ export function useGetCurrentUserEvents(
   const { isError, data, isLoading } = useQuery<Event[]>({
     queryKey: eventQueryKeys.currentUser(),
     queryFn: getCurrentUserEvents,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
-    retry: 1,
+    staleTime: 0,
+    gcTime: 0,
+    retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     ...options,
   });

@@ -31,7 +31,8 @@ export default function InfiniteEvents() {
   } = useInfiniteQuery<EventsResponse>({
     queryKey: ["events"],
     refetchOnMount: "always",
-
+    gcTime: 0,
+    staleTime: 0,
     queryFn: async ({ pageParam }) => {
       return getEvents(pageParam as number);
     },
