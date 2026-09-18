@@ -1,5 +1,4 @@
 import EventsCard from "@/components/ui/eventsCard";
-import EventsGridSkeleton from "@/components/ui/eventsCardSekelton";
 import H1 from "@/components/ui/h1";
 import { getReservedEvents } from "@/lib/server-utils";
 import { isPast } from "date-fns";
@@ -39,7 +38,6 @@ export default async function page() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10 mb-10">
         {events?.map((event) => {
           const isInPast = isPast(event!.date);
-
           return (
             <EventsCard isInPast={isInPast} key={event?.id} event={event} />
           );

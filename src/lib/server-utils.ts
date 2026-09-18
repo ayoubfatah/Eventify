@@ -1,7 +1,6 @@
 "use server";
-import { notFound } from "next/navigation";
-import { revalidatePath, revalidateTag } from "next/cache";
 
+import { notFound } from "next/navigation";
 import type { Event } from "./types";
 import { NonNullEvent } from "@/components/ui/EditEventForm";
 import { getTokenFromCookies } from "./cookies";
@@ -14,17 +13,13 @@ type EventsResponse = {
   limit: number;
   hasMore: boolean;
 };
+
 // events
+
 export async function getEvents(pageParam: number): Promise<EventsResponse> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/events?page=${pageParam}&limit=6`,
-    {
-      next: {
-        revalidate: 60,
-        tags: ["events"],
-      },
-    },
-  );
+  const response = await fetch(`${API_URL}/events?page=${pageParam}&limit=6`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch events");
@@ -35,14 +30,11 @@ export async function getEvents(pageParam: number): Promise<EventsResponse> {
 
 // events by city
 
-export async function getEventsByCityName(city: string): Promise<{
-  events: Event[];
-}> {
+export async function getEventsByCityName(
+  city: string,
+): Promise<{ events: Event[] }> {
   const response = await fetch(`${API_URL}/events/city/${city}`, {
-    next: {
-      revalidate: 60,
-      tags: ["events", `events:city:${city}`],
-    },
+    cache: "no-store",
   });
 
   if (!response.ok) {
@@ -60,10 +52,7 @@ export async function getEventsByCityName(city: string): Promise<{
 
 export async function getEvent(slug: string): Promise<Event> {
   const response = await fetch(`${API_URL}/events/${slug}`, {
-    next: {
-      revalidate: 60,
-      tags: ["events", `event:${slug}`],
-    },
+    cache: "no-store",
   });
 
   if (!response.ok) {
@@ -87,6 +76,7 @@ export async function updateEvent(data: NonNullEvent) {
       Authorization: token!,
     },
     body: JSON.stringify(data),
+    cache: "no-store",
   });
 
   if (!response.ok) {
@@ -98,16 +88,6 @@ export async function updateEvent(data: NonNullEvent) {
   }
 
   const updatedEvent = await response.json();
-
-  revalidateTag("events", "max");
-
-  if (data.slug) {
-    revalidateTag(`event:${data.slug}`, "max");
-    revalidatePath(`/events/${data.slug}`);
-  }
-
-  revalidatePath("/my-events");
-  revalidatePath("/events");
 
   return updatedEvent;
 }
@@ -127,6 +107,7 @@ export async function addNewEvent(data: NonNullEvent) {
       ...data,
       date: new Date(data.date).toISOString(),
     }),
+    cache: "no-store",
   });
 
   if (!response.ok) {
@@ -136,14 +117,6 @@ export async function addNewEvent(data: NonNullEvent) {
   }
 
   const createdEvent = await response.json();
-
-  if (createdEvent.slug) {
-    revalidateTag(`event:${createdEvent.slug}`, "max");
-    revalidatePath(`/events/${createdEvent.slug}`);
-  }
-
-  revalidateTag("events", "max");
-  revalidatePath("/my-events");
 
   return createdEvent;
 }
@@ -160,6 +133,7 @@ export async function deleteEvent(eventId: number) {
         "Content-Type": "application/json",
         Authorization: token!,
       },
+      cache: "no-store",
     });
 
     const data = await response.json();
@@ -167,14 +141,6 @@ export async function deleteEvent(eventId: number) {
     if (!response.ok) {
       throw new Error(data.message || "Couldn't delete the event");
     }
-
-    if (data.slug) {
-      revalidateTag(`event:${data.slug}`, "max");
-      revalidatePath(`/events/${data.slug}`);
-    }
-
-    revalidateTag("events", "max");
-    revalidatePath("/my-events");
 
     return data.events;
   } catch (error) {
@@ -228,6 +194,7 @@ export async function reserveEvent(eventId: string) {
       "Content-Type": "application/json",
       Authorization: token!,
     },
+    cache: "no-store",
   });
 
   if (!response.ok) {
@@ -235,11 +202,6 @@ export async function reserveEvent(eventId: string) {
 
     throw new Error(errorData?.message || "Failed to reserve event");
   }
-
-  revalidateTag("registrations", "max");
-  revalidateTag("events", "max");
-  revalidatePath("/events");
-  revalidatePath("/event");
 
   return response.json();
 }
@@ -256,6 +218,7 @@ export async function registerForEvent(eventId: number): Promise<string> {
         "Content-Type": "application/json",
         Authorization: token!,
       },
+      cache: "no-store",
     });
 
     const data = await response.json();
@@ -263,11 +226,6 @@ export async function registerForEvent(eventId: number): Promise<string> {
     if (!response.ok) {
       throw new Error(data.message || "Couldn't register for event");
     }
-
-    revalidateTag("registrations", "max");
-    revalidateTag("events", "max");
-    revalidatePath("/events");
-    revalidatePath("/event");
 
     return data.message;
   } catch (error) {
@@ -293,6 +251,7 @@ export async function cancelEventRegistration(
         "Content-Type": "application/json",
         Authorization: token!,
       },
+      cache: "no-store",
     });
 
     const data = await response.json();
@@ -300,11 +259,6 @@ export async function cancelEventRegistration(
     if (!response.ok) {
       throw new Error(data.message || "Couldn't cancel event registration");
     }
-
-    revalidateTag("registrations", "max");
-    revalidateTag("events", "max");
-    revalidatePath("/events");
-    revalidatePath("/event");
 
     return data.message;
   } catch (error) {

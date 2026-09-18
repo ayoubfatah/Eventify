@@ -5,7 +5,6 @@ const EventCardSkeleton = () => {
         {/* Image skeleton */}
         <div className="w-full h-[280px] bg-white/10 animate-pulse" />
 
-        {/* Content section */}
         <section className="h-1/2 flex pt-4 items-center flex-col">
           {/* Title skeleton */}
           <div className="h-8 w-2/3 bg-white/10 rounded-md animate-pulse mt-2" />
@@ -14,8 +13,6 @@ const EventCardSkeleton = () => {
           {/* Location skeleton */}
           <div className="h-4 w-1/3 bg-white/10 rounded-md animate-pulse mt-3" />
         </section>
-
-        {/* Date badge skeleton */}
       </article>
     </div>
   );

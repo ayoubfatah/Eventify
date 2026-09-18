@@ -16,7 +16,7 @@ export default function MyEvents() {
     return (
       <main className="container mx-auto px-4 py-5 flex flex-col border-white/30 mb-9">
         <H1 className="text-center py-10">All Your events</H1>
-        <EventsGridSkeleton />;
+        <EventsGridSkeleton cardsNum={6} />
       </main>
     );
   }
