@@ -23,6 +23,7 @@ export default function InfiniteEvents() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery<EventsResponse>({
     queryKey: ["events"],
     refetchOnMount: "always",
@@ -50,8 +51,20 @@ export default function InfiniteEvents() {
     },
   });
 
+  useEffect(() => {
+    const handlePageShow = () => {
+      refetch();
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, [refetch]);
+
   const events = data?.pages.flatMap((page) => page.events) ?? [];
-  console.log(events);
+
   useEffect(() => {
     const element = loadMoreRef.current;
 

@@ -1,3 +1,5 @@
+import H1 from "@/components/ui/h1";
+
 const EventCardSkeleton = () => {
   return (
     <div className="relative w-full flex">
@@ -21,13 +23,20 @@ const EventCardSkeleton = () => {
   );
 };
 
-const EventsGridSkeleton = ({ cardsNum = 3 }: { cardsNum?: number }) => {
+export default async function Loading({
+  params,
+}: {
+  params: Promise<{ city: string }>;
+}) {
+  const { city } = await params;
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {[...Array(cardsNum)].map((_, index) => (
-        <EventCardSkeleton key={index} />
-      ))}
-    </div>
+    <main className="container mx-auto px-4 py-5 flex flex-col  border-white/30 mb-9">
+      <H1 className="text-center py-10 ">All events in {city} </H1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {[...Array(6)].map((_, index) => (
+          <EventCardSkeleton key={index} />
+        ))}
+      </div>
+    </main>
   );
-};
-export default EventsGridSkeleton;
+}
