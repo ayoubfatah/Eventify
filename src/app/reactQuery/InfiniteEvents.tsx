@@ -5,6 +5,8 @@ import EventsList from "@/components/ui/EventsList";
 import { getEvents } from "@/lib/server-utils";
 import { Event } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
 import { useEffect, useRef } from "react";
 
 type EventsResponse = {
@@ -15,6 +17,8 @@ type EventsResponse = {
 };
 
 export default function InfiniteEvents() {
+  const router = useRouter();
+
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -24,7 +28,6 @@ export default function InfiniteEvents() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-    refetch,
   } = useInfiniteQuery<EventsResponse>({
     queryKey: ["events"],
     refetchOnMount: "always",
@@ -44,16 +47,8 @@ export default function InfiniteEvents() {
   });
 
   useEffect(() => {
-    const handlePageShow = () => {
-      refetch();
-    };
-
-    window.addEventListener("pageshow", handlePageShow);
-
-    return () => {
-      window.removeEventListener("pageshow", handlePageShow);
-    };
-  }, [refetch]);
+    router.refresh();
+  }, [router]);
 
   const events = data?.pages.flatMap((page) => page.events) ?? [];
 
