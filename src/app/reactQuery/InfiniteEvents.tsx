@@ -25,6 +25,7 @@ export default function InfiniteEvents() {
     hasNextPage,
   } = useInfiniteQuery<EventsResponse>({
     queryKey: ["events"],
+    refetchOnMount: "always",
 
     queryFn: async ({ pageParam }) => {
       const response = await fetch(
