@@ -73,15 +73,11 @@ export default function EventsCard({
       const result = await updateEvent(updatedData);
 
       setEventData(result.event);
+      await queryClient.invalidateQueries({ queryKey: ["events"] });
 
-      if (result) {
-        toast.success("Event edited successfully!");
-        queryClient.invalidateQueries({ queryKey: ["events"] });
+      toast.success("Event edited successfully!");
 
-        setTimeout(() => {
-          setIsEditOpen(false);
-        }, 0);
-      }
+      setIsEditOpen(false);
     } catch (error) {
       console.log(error);
     }
