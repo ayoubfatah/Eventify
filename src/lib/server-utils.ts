@@ -8,27 +8,29 @@ import { getTokenFromCookies } from "./cookies";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// events
-
-export async function getEvents(): Promise<{
+type EventsResponse = {
   events: Event[];
-}> {
-  const response = await fetch(`${API_URL}/events?page=2&limit=4`, {
-    next: {
-      revalidate: 60,
-      tags: ["events"],
+  page: number;
+  limit: number;
+  hasMore: boolean;
+};
+// events
+export async function getEvents(pageParam: number): Promise<EventsResponse> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/events?page=${pageParam}&limit=6`,
+    {
+      next: {
+        revalidate: 60,
+        tags: ["events"],
+      },
     },
-  });
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch events");
   }
 
-  const data = await response.json();
-
-  return {
-    events: data.events,
-  };
+  return response.json();
 }
 
 // events by city

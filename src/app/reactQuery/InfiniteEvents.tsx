@@ -2,6 +2,7 @@
 
 import EventsGridSkeleton from "@/components/ui/eventsCardSekelton";
 import EventsList from "@/components/ui/EventsList";
+import { getEvents } from "@/lib/server-utils";
 import { Event } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
@@ -29,17 +30,8 @@ export default function InfiniteEvents() {
     refetchOnMount: "always",
 
     queryFn: async ({ pageParam }) => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/events?page=${pageParam}&limit=6`,
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch events");
-      }
-
-      return response.json();
+      return getEvents(pageParam as number);
     },
-
     initialPageParam: 1,
 
     getNextPageParam: (lastPage) => {
