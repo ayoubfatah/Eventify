@@ -58,7 +58,7 @@ export default function EventCard({ data }: EventCardProps) {
 
       toast.success("Event edited successfully!");
       queryClient.invalidateQueries({ queryKey: ["events"] });
-
+      router.refresh();
       setEventData(result.event);
 
       setTimeout(() => {
